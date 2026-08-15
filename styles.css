@@ -950,6 +950,113 @@ button.stat-card {
   background: rgba(255, 255, 255, 0.3);
 }
 
+/* Propose Resource Modal & Form Styles */
+.modal-panel {
+  background: var(--bg-dark);
+  border: 1px solid var(--border-color);
+  width: 90%;
+  max-width: 580px;
+  max-height: 90vh;
+  margin: auto;
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+  overflow: hidden;
+  animation: modalFadeIn 0.25s ease-out;
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; transform: scale(0.95) translateY(10px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.propose-form {
+  padding: 24px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-desc {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-bottom: 4px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 65px;
+  font-family: inherit;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.form-status-msg {
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  display: none;
+}
+
+.form-status-msg.success {
+  display: block;
+  background: var(--badge-easy-bg);
+  color: var(--badge-easy-color);
+  border: 1px solid rgba(52, 211, 153, 0.3);
+}
+
+.form-status-msg.error {
+  display: block;
+  background: var(--badge-hard-bg);
+  color: var(--badge-hard-color);
+  border: 1px solid rgba(248, 113, 113, 0.3);
+}
+
+.form-status-msg.loading {
+  display: block;
+  background: rgba(58, 134, 255, 0.15);
+  color: var(--accent-cyan);
+  border: 1px solid rgba(76, 201, 240, 0.3);
+}
+
+.propose-btn {
+  background: linear-gradient(135deg, rgba(58, 134, 255, 0.2), rgba(76, 201, 240, 0.2));
+  border: 1px solid var(--border-highlight);
+  color: var(--text-main);
+  transition: var(--transition-fast);
+}
+
+.propose-btn:hover {
+  background: linear-gradient(135deg, rgba(58, 134, 255, 0.4), rgba(76, 201, 240, 0.4));
+  box-shadow: var(--shadow-glow);
+}
+
 /* Responsive Breakpoints */
 @media (max-width: 900px) {
   .resources-grid {

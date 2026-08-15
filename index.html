@@ -37,6 +37,11 @@
         </button>
       </div>
 
+      <!-- Propose Resource Button -->
+      <button id="btnOpenPropose" class="lang-btn propose-btn" title="Proponer Recurso">
+        ➕ <span id="txtProposeBtn">Proponer Recurso</span>
+      </button>
+
       <!-- Slide Drawer Toggle -->
       <button id="btnOpenDrawer" class="icon-btn" title="Índice de Diapositivas">
         ☰
@@ -102,6 +107,73 @@
       <div id="drawerList" class="drawer-list">
         <!-- 14 Drawer List Items Rendered by app.js -->
       </div>
+    </div>
+  </div>
+
+  <!-- Propose Resource Modal Overlay -->
+  <div id="proposeBackdrop" class="drawer-backdrop">
+    <div class="modal-panel">
+      <div class="drawer-header">
+        <h3><span id="modalProposeTitle">Proponer Nuevo Recurso</span></h3>
+        <button id="btnClosePropose" class="btn-close-drawer">✕</button>
+      </div>
+      <form id="proposeForm" class="propose-form">
+        <p id="modalProposeSubtitle" class="form-desc">
+          Propón una herramienta digital para incluirla en el compendio. Será revisada por un administrador antes de publicarse.
+        </p>
+
+        <div class="form-group">
+          <label for="propName" id="lblPropName">Nombre de la Herramienta *</label>
+          <input type="text" id="propName" required class="search-input">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="propCategory" id="lblPropCategory">Categoría *</label>
+            <select id="propCategory" required class="select-filter">
+              <!-- Rendered by app.js -->
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="propDifficulty" id="lblPropDifficulty">Dificultad *</label>
+            <select id="propDifficulty" required class="select-filter">
+              <option value="Fácil">Fácil / Easy</option>
+              <option value="Media">Media / Medium</option>
+              <option value="Difícil">Difícil / Difficult</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="propUrl" id="lblPropUrl">Sitio Web (URL) *</label>
+          <input type="url" id="propUrl" required class="search-input">
+        </div>
+
+        <div class="form-group">
+          <label for="propDescription" id="lblPropDescription">Descripción Corta *</label>
+          <textarea id="propDescription" rows="2" required class="search-input form-textarea"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="propExample" id="lblPropExample">Ejemplo de Uso Educativo *</label>
+          <textarea id="propExample" rows="2" required class="search-input form-textarea"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="propEmail" id="lblPropEmail">Tu Correo Electrónico (Opcional)</label>
+          <input type="email" id="propEmail" class="search-input">
+        </div>
+
+        <div id="proposeStatus" class="form-status-msg"></div>
+
+        <div class="form-actions">
+          <button type="button" id="btnCancelPropose" class="toggle-btn">Cancelar</button>
+          <button type="submit" id="btnSubmitPropose" class="toggle-btn active submit-btn">
+            <span>🚀</span> <span id="txtSubmitBtn">Enviar Propuesta</span>
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 

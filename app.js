@@ -34,6 +34,10 @@ function getCategoryIcon(cat) {
   return '📁';
 }
 
+// Google Apps Script Web App Endpoint URL for Resource Proposals
+// Replace this string with your published Google Web App URL (e.g. 'https://script.google.com/macros/s/AKfycb.../exec')
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzGwp1XYOUuFYzmfbDg9zPDoMca2ioGWcG__K4ShJdkk11rAKNe4rQ2l_XDpAf-QXTY/exec';
+
 const UI_TEXT = {
   ES: {
     appTitle: 'Recursos para Formadores',
@@ -62,7 +66,27 @@ const UI_TEXT = {
     resourcesCount: 'recursos',
     resourceSingle: 'recurso',
     drawerIntro: 'Bienvenida e Introducción',
-    drawerMap: 'Taxonomía de Áreas de Aplicación'
+    drawerMap: 'Taxonomía de Áreas de Aplicación',
+    btnPropose: 'Proponer Recurso',
+    modalProposeTitle: 'Proponer Nuevo Recurso',
+    modalProposeSubtitle: 'Propón una herramienta digital para incluirla en el compendio. Será revisada por un administrador antes de publicarse.',
+    lblPropName: 'Nombre de la Herramienta *',
+    lblPropCategory: 'Categoría *',
+    lblPropDifficulty: 'Nivel de Dificultad *',
+    lblPropUrl: 'Sitio Web (URL) *',
+    lblPropDescription: 'Descripción Corta *',
+    lblPropExample: 'Ejemplo de Uso Educativo *',
+    lblPropEmail: 'Tu Correo Electrónico (Opcional)',
+    phPropName: 'Ej: Canva, GeoGebra, GitHub...',
+    phPropUrl: 'https://ejemplo.com',
+    phPropDesc: 'Resumen del valor y características principales de la herramienta...',
+    phPropEx: 'Cómo se puede aplicar concretamente en clase o taller...',
+    phPropEmail: 'docente@ejemplo.com (para avisarte si es aprobada)',
+    btnCancel: 'Cancelar',
+    btnSubmit: 'Enviar Propuesta',
+    submitting: 'Enviando propuesta...',
+    successMsg: '¡Propuesta enviada con éxito! Queda pendiente de revisión por el administrador.',
+    errorMsg: 'Ocurrió un error al enviar la propuesta. Por favor intenta de nuevo.'
   },
   EN: {
     appTitle: 'Resources for Educators',
@@ -91,7 +115,27 @@ const UI_TEXT = {
     resourcesCount: 'resources',
     resourceSingle: 'resource',
     drawerIntro: 'Welcome & Introduction',
-    drawerMap: 'Application Areas Taxonomy'
+    drawerMap: 'Application Areas Taxonomy',
+    btnPropose: 'Propose Resource',
+    modalProposeTitle: 'Propose New Resource',
+    modalProposeSubtitle: 'Propose a digital tool to include in the catalog. It will be reviewed by an administrator before publishing.',
+    lblPropName: 'Tool Name *',
+    lblPropCategory: 'Category *',
+    lblPropDifficulty: 'Difficulty Level *',
+    lblPropUrl: 'Website (URL) *',
+    lblPropDescription: 'Short Description *',
+    lblPropExample: 'Educational Use Example *',
+    lblPropEmail: 'Your Email (Optional)',
+    phPropName: 'E.g., Canva, GeoGebra, GitHub...',
+    phPropUrl: 'https://example.com',
+    phPropDesc: 'Brief summary of key features and educational value...',
+    phPropEx: 'How to apply this specifically in a classroom or workshop...',
+    phPropEmail: 'teacher@example.com (to notify you when approved)',
+    btnCancel: 'Cancel',
+    btnSubmit: 'Submit Proposal',
+    submitting: 'Submitting proposal...',
+    successMsg: 'Proposal submitted successfully! Pending administrator review.',
+    errorMsg: 'An error occurred while submitting your proposal. Please try again.'
   }
 };
 
@@ -101,6 +145,7 @@ const state = {
   viewMode: 'slides', // 'slides' | 'explorer'
   currentSlideIndex: 0, // 0 = Intro, 1 = Map, 2..13 = Category Slides
   isDrawerOpen: false,
+  isProposeModalOpen: false,
   searchQuery: '',
   selectedCategory: 'ALL',
   selectedDifficulty: 'ALL',
@@ -119,7 +164,7 @@ function initEventListeners() {
   // Mode Switcher
   document.getElementById('btnViewSlides').addEventListener('click', () => setViewMode('slides'));
   document.getElementById('btnViewExplorer').addEventListener('click', () => setViewMode('explorer'));
-  
+
   // Drawer Toggle
   document.getElementById('btnOpenDrawer').addEventListener('click', toggleDrawer);
   document.getElementById('btnCloseDrawer').addEventListener('click', closeDrawer);
@@ -152,16 +197,31 @@ function initEventListeners() {
 
   // Keyboard Shortcuts
   document.addEventListener('keydown', (e) => {
-    if (state.isDrawerOpen && e.key === 'Escape') {
-      closeDrawer();
-      return;
+    if (e.key === 'Escape') {
+      if (state.isProposeModalOpen) {
+        closeProposeModal();
+        return;
+      }
+      if (state.isDrawerOpen) {
+        closeDrawer();
+        return;
+      }
     }
-    
-    if (state.viewMode === 'slides') {
+
+    if (state.viewMode === 'slides' && !state.isProposeModalOpen && !state.isDrawerOpen) {
       if (e.key === 'ArrowLeft') prevSlide();
       if (e.key === 'ArrowRight') nextSlide();
     }
   });
+
+  // Propose Modal Event Listeners
+  document.getElementById('btnOpenPropose').addEventListener('click', openProposeModal);
+  document.getElementById('btnClosePropose').addEventListener('click', closeProposeModal);
+  document.getElementById('btnCancelPropose').addEventListener('click', closeProposeModal);
+  document.getElementById('proposeBackdrop').addEventListener('click', (e) => {
+    if (e.target === document.getElementById('proposeBackdrop')) closeProposeModal();
+  });
+  document.getElementById('proposeForm').addEventListener('submit', handleProposalSubmit);
 }
 
 // Fetch & Parse Markdown Data with Resilient Fallback Paths and Offline file:// Fallback
@@ -300,7 +360,7 @@ function updateStaticUIText() {
 
   // Populate Category Filter Dropdown
   const catFilter = document.getElementById('filterCategory');
-  catFilter.innerHTML = `<option value="ALL">${t.allCategories}</option>` + 
+  catFilter.innerHTML = `<option value="ALL">${t.allCategories}</option>` +
     state.taxonomy.map(cat => `<option value="${cat.code}">${cat.code} - ${cat.name}</option>`).join('');
 
   const diffFilter = document.getElementById('filterDifficulty');
@@ -310,6 +370,30 @@ function updateStaticUIText() {
     <option value="Media">${state.lang === 'ES' ? 'Media' : 'Medium'}</option>
     <option value="Difícil">${state.lang === 'ES' ? 'Difícil' : 'Difficult'}</option>
   `;
+
+  // Update Propose Modal UI Text & Placeholders
+  document.getElementById('txtProposeBtn').textContent = t.btnPropose;
+  document.getElementById('modalProposeTitle').textContent = t.modalProposeTitle;
+  document.getElementById('modalProposeSubtitle').textContent = t.modalProposeSubtitle;
+  document.getElementById('lblPropName').textContent = t.lblPropName;
+  document.getElementById('lblPropCategory').textContent = t.lblPropCategory;
+  document.getElementById('lblPropDifficulty').textContent = t.lblPropDifficulty;
+  document.getElementById('lblPropUrl').textContent = t.lblPropUrl;
+  document.getElementById('lblPropDescription').textContent = t.lblPropDescription;
+  document.getElementById('lblPropExample').textContent = t.lblPropExample;
+  document.getElementById('lblPropEmail').textContent = t.lblPropEmail;
+
+  document.getElementById('propName').placeholder = t.phPropName;
+  document.getElementById('propUrl').placeholder = t.phPropUrl;
+  document.getElementById('propDescription').placeholder = t.phPropDesc;
+  document.getElementById('propExample').placeholder = t.phPropEx;
+  document.getElementById('propEmail').placeholder = t.phPropEmail;
+  document.getElementById('btnCancelPropose').textContent = t.btnCancel;
+  document.getElementById('txtSubmitBtn').textContent = t.btnSubmit;
+
+  // Populate Propose Category Dropdown
+  const propCatSelect = document.getElementById('propCategory');
+  propCatSelect.innerHTML = state.taxonomy.map(cat => `<option value="${cat.code}">${cat.code} - ${cat.name}</option>`).join('');
 }
 
 // Main UI Render Controller
@@ -357,9 +441,9 @@ function renderSlides() {
       <p class="subtitle">${t.catMapSubtitle}</p>
       <div class="category-grid">
         ${state.taxonomy.map(cat => {
-          const count = state.resources.filter(r => r.category === cat.code).length;
-          const icon = getCategoryIcon(cat);
-          return `
+    const count = state.resources.filter(r => r.category === cat.code).length;
+    const icon = getCategoryIcon(cat);
+    return `
             <div class="category-card" onclick="jumpToCategorySlide('${cat.code}')">
               <div>
                 <div class="cat-header-top">
@@ -375,7 +459,7 @@ function renderSlides() {
               </div>
             </div>
           `;
-        }).join('')}
+  }).join('')}
       </div>
     </div>
   `;
@@ -554,7 +638,7 @@ function setViewMode(mode) {
   state.viewMode = mode;
   document.getElementById('btnViewSlides').classList.toggle('active', mode === 'slides');
   document.getElementById('btnViewExplorer').classList.toggle('active', mode === 'explorer');
-  
+
   document.getElementById('slideViewport').style.display = mode === 'slides' ? 'flex' : 'none';
   document.getElementById('bottomNav').style.display = mode === 'slides' ? 'flex' : 'none';
   document.getElementById('explorerView').classList.toggle('active', mode === 'explorer');
@@ -573,4 +657,74 @@ function closeDrawer() {
 function toggleLanguage() {
   state.lang = state.lang === 'ES' ? 'EN' : 'ES';
   loadData(state.lang);
+}
+
+// Propose Modal Controller & Submission Logic
+function openProposeModal() {
+  state.isProposeModalOpen = true;
+  document.getElementById('proposeBackdrop').classList.add('open');
+  const statusDiv = document.getElementById('proposeStatus');
+  statusDiv.className = 'form-status-msg';
+  statusDiv.style.display = 'none';
+}
+
+function closeProposeModal() {
+  state.isProposeModalOpen = false;
+  document.getElementById('proposeBackdrop').classList.remove('open');
+}
+
+async function handleProposalSubmit(e) {
+  e.preventDefault();
+  const t = UI_TEXT[state.lang];
+  const submitBtn = document.getElementById('btnSubmitPropose');
+  const statusDiv = document.getElementById('proposeStatus');
+
+  const formData = {
+    name: document.getElementById('propName').value.trim(),
+    category: document.getElementById('propCategory').value,
+    difficulty: document.getElementById('propDifficulty').value,
+    url: document.getElementById('propUrl').value.trim(),
+    description: document.getElementById('propDescription').value.trim(),
+    example: document.getElementById('propExample').value.trim(),
+    email: document.getElementById('propEmail').value.trim(),
+    submittedAt: new Date().toISOString(),
+    lang: state.lang
+  };
+
+  submitBtn.disabled = true;
+  statusDiv.style.display = 'block';
+  statusDiv.className = 'form-status-msg loading';
+  statusDiv.textContent = t.submitting;
+
+  if (!GOOGLE_SCRIPT_URL) {
+    // Demonstration mode when URL is not configured yet
+    setTimeout(() => {
+      statusDiv.className = 'form-status-msg success';
+      statusDiv.textContent = `${t.successMsg} (${state.lang === 'ES' ? 'Modo demostración: configura GOOGLE_SCRIPT_URL en app.js para vincular tu Google Sheet' : 'Demo mode: set GOOGLE_SCRIPT_URL in app.js to connect your Google Sheet'})`;
+      submitBtn.disabled = false;
+      document.getElementById('proposeForm').reset();
+    }, 700);
+    return;
+  }
+
+  try {
+    await fetch(GOOGLE_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {
+        'Content-Type': 'text/plain;charset=utf-8'
+      },
+      body: JSON.stringify(formData)
+    });
+
+    statusDiv.className = 'form-status-msg success';
+    statusDiv.textContent = t.successMsg;
+    document.getElementById('proposeForm').reset();
+  } catch (err) {
+    console.error('Error submitting proposal to Google Sheet:', err);
+    statusDiv.className = 'form-status-msg error';
+    statusDiv.textContent = t.errorMsg;
+  } finally {
+    submitBtn.disabled = false;
+  }
 }
