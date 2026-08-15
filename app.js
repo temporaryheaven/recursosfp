@@ -161,36 +161,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Initialize DOM Event Listeners
 function initEventListeners() {
+  const addSafeListener = (id, event, handler) => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener(event, handler);
+  };
+
   // Mode Switcher
-  document.getElementById('btnViewSlides').addEventListener('click', () => setViewMode('slides'));
-  document.getElementById('btnViewExplorer').addEventListener('click', () => setViewMode('explorer'));
+  addSafeListener('btnViewSlides', 'click', () => setViewMode('slides'));
+  addSafeListener('btnViewExplorer', 'click', () => setViewMode('explorer'));
 
   // Drawer Toggle
-  document.getElementById('btnOpenDrawer').addEventListener('click', toggleDrawer);
-  document.getElementById('btnCloseDrawer').addEventListener('click', closeDrawer);
-  document.getElementById('drawerBackdrop').addEventListener('click', (e) => {
+  addSafeListener('btnOpenDrawer', 'click', toggleDrawer);
+  addSafeListener('btnCloseDrawer', 'click', closeDrawer);
+  addSafeListener('drawerBackdrop', 'click', (e) => {
     if (e.target === document.getElementById('drawerBackdrop')) closeDrawer();
   });
 
   // Language Toggle
-  document.getElementById('btnLangToggle').addEventListener('click', toggleLanguage);
+  addSafeListener('btnLangToggle', 'click', toggleLanguage);
 
   // Nav Buttons
-  document.getElementById('btnPrev').addEventListener('click', prevSlide);
-  document.getElementById('btnNext').addEventListener('click', nextSlide);
+  addSafeListener('btnPrev', 'click', prevSlide);
+  addSafeListener('btnNext', 'click', nextSlide);
 
   // Search & Filters in Explorer
-  document.getElementById('searchInput').addEventListener('input', (e) => {
+  addSafeListener('searchInput', 'input', (e) => {
     state.searchQuery = e.target.value.toLowerCase();
     renderExplorer();
   });
 
-  document.getElementById('filterCategory').addEventListener('change', (e) => {
+  addSafeListener('filterCategory', 'change', (e) => {
     state.selectedCategory = e.target.value;
     renderExplorer();
   });
 
-  document.getElementById('filterDifficulty').addEventListener('change', (e) => {
+  addSafeListener('filterDifficulty', 'change', (e) => {
     state.selectedDifficulty = e.target.value;
     renderExplorer();
   });
@@ -215,13 +220,13 @@ function initEventListeners() {
   });
 
   // Propose Modal Event Listeners
-  document.getElementById('btnOpenPropose').addEventListener('click', openProposeModal);
-  document.getElementById('btnClosePropose').addEventListener('click', closeProposeModal);
-  document.getElementById('btnCancelPropose').addEventListener('click', closeProposeModal);
-  document.getElementById('proposeBackdrop').addEventListener('click', (e) => {
+  addSafeListener('btnOpenPropose', 'click', openProposeModal);
+  addSafeListener('btnClosePropose', 'click', closeProposeModal);
+  addSafeListener('btnCancelPropose', 'click', closeProposeModal);
+  addSafeListener('proposeBackdrop', 'click', (e) => {
     if (e.target === document.getElementById('proposeBackdrop')) closeProposeModal();
   });
-  document.getElementById('proposeForm').addEventListener('submit', handleProposalSubmit);
+  addSafeListener('proposeForm', 'submit', handleProposalSubmit);
 }
 
 // Fetch & Parse Markdown Data with Resilient Fallback Paths and Offline file:// Fallback
