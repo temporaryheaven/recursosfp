@@ -952,25 +952,21 @@ button.stat-card {
 
 /* Propose Resource Modal & Form Styles */
 #proposeBackdrop {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  width: 100vw !important;
-  height: 100vh !important;
-  background: rgba(0, 0, 0, 0.75) !important;
-  backdrop-filter: blur(8px) !important;
-  z-index: 9999 !important;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.25s ease;
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  z-index: 9999;
 }
 
 #proposeBackdrop.open {
-  opacity: 1 !important;
-  pointer-events: auto !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
 
 .modal-panel {

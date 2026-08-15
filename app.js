@@ -676,6 +676,7 @@ function openProposeModal() {
   const proposeBackdrop = document.getElementById('proposeBackdrop');
   if (proposeBackdrop) {
     proposeBackdrop.classList.add('open');
+    proposeBackdrop.style.display = 'flex';
   }
   const statusDiv = document.getElementById('proposeStatus');
   if (statusDiv) {
@@ -691,6 +692,7 @@ function closeProposeModal() {
   const proposeBackdrop = document.getElementById('proposeBackdrop');
   if (proposeBackdrop) {
     proposeBackdrop.classList.remove('open');
+    proposeBackdrop.style.display = 'none';
   }
 }
 
