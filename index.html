@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Catálogo e Índice de Recursos Online Gratuitos para Formadores - Formación Profesional y Educación de Adultos.">
+  <title>Recursos Gratuitos para Formadores | SPA Option 1</title>
+  
+  <!-- Fonts & Stylesheet -->
+  <link rel="stylesheet" href="./styles.css?v=2.0">
+</head>
+<body>
+
+  <!-- Top Navbar Header -->
+  <header class="app-header">
+    <div class="brand-container">
+      <div class="brand-icon">🎓</div>
+      <div class="brand-text">
+        <h1 id="appTitle">Recursos Gratuitos para Formadores</h1>
+        <p id="appSubtitle">Formación Profesional y Educación de Adultos</p>
+      </div>
+    </div>
+
+    <div class="header-controls">
+      <!-- Slide Counter Badge -->
+      <div id="slideCounter" class="slide-badge">
+        <span class="dot"></span> 1 / 14
+      </div>
+
+      <!-- View Mode Switcher -->
+      <div class="mode-switcher">
+        <button id="btnViewSlides" class="toggle-btn active">
+          <span>📊</span> <span id="txtViewSlides">Diapositivas</span>
+        </button>
+        <button id="btnViewExplorer" class="toggle-btn">
+          <span>🗂️</span> <span id="txtViewExplorer">Explorador (77)</span>
+        </button>
+      </div>
+
+      <!-- Slide Drawer Toggle -->
+      <button id="btnOpenDrawer" class="icon-btn" title="Índice de Diapositivas">
+        ☰
+      </button>
+
+      <!-- Language Switcher -->
+      <button id="btnLangToggle" class="lang-btn" title="Cambiar Idioma / Switch Language">
+        <span id="langLabel">ES</span> 🌐
+      </button>
+    </div>
+  </header>
+
+  <!-- Main App Layout Container -->
+  <main class="main-container">
+    
+    <!-- 1. Slide View Mode -->
+    <div id="slideViewport" class="slide-viewport">
+      <!-- Dynamic Slide Contents Rendered by app.js -->
+    </div>
+
+    <!-- Bottom Navigation Bar (Slide Mode) -->
+    <div id="bottomNav" class="bottom-nav">
+      <button id="btnPrev" class="nav-btn">← Anterior</button>
+      <div id="paginationDots" class="pagination-dots">
+        <!-- 14 Interactive Dots Rendered by app.js -->
+      </div>
+      <button id="btnNext" class="nav-btn btn-next">Siguiente →</button>
+    </div>
+
+    <!-- 2. Explorer View Mode -->
+    <div id="explorerView" class="explorer-view">
+      <div class="explorer-toolbar">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="searchInput" class="search-input" placeholder="Buscar herramienta, categoría o palabra clave...">
+        </div>
+
+        <div class="filter-group">
+          <select id="filterCategory" class="select-filter">
+            <option value="ALL">Todas las categorías</option>
+          </select>
+
+          <select id="filterDifficulty" class="select-filter">
+            <option value="ALL">Todas las dificultades</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="explorerGrid" class="explorer-grid">
+        <!-- 77 Resource Cards Rendered by app.js -->
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Slide Index Drawer Modal Overlay -->
+  <div id="drawerBackdrop" class="drawer-backdrop">
+    <div class="drawer-panel">
+      <div class="drawer-header">
+        <h3><span id="drawerTitleText">Índice de Diapositivas</span></h3>
+        <button id="btnCloseDrawer" class="btn-close-drawer">✕</button>
+      </div>
+      <div id="drawerList" class="drawer-list">
+        <!-- 14 Drawer List Items Rendered by app.js -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Application Logic -->
+  <script src="./embedded_data.js?v=2.0"></script>
+  <script src="./app.js?v=2.0"></script>
+</body>
+</html>
