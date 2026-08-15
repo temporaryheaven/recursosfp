@@ -567,10 +567,12 @@ function renderResourceCard(r) {
   return `
     <div class="resource-card">
       <div>
-        <div class="res-category-pill" onclick="jumpToCategorySlide('${r.category}')" title="${catName}">
-          <span class="res-cat-icon">${catIcon}</span>
-          <span class="res-cat-code">${r.category}</span>
-          <span class="res-cat-label">• ${catName}</span>
+        <div class="res-category-row">
+          <div class="res-category-pill" onclick="jumpToCategorySlide('${r.category}')" title="${catName}">
+            <span class="res-cat-icon">${catIcon}</span>
+            <span class="res-cat-code">${r.category}</span>
+            <span class="res-cat-label">• ${catName}</span>
+          </div>
         </div>
 
         <div class="res-header">

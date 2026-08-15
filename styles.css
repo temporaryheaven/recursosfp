@@ -649,21 +649,30 @@ button.stat-card {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
 }
 
+.res-category-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 12px;
+  width: 100%;
+}
+
 .res-category-pill {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 5px;
   background: var(--drawer-badge-bg);
   border: 1px solid var(--border-color);
-  padding: 3px 10px;
+  padding: 3px 12px;
   border-radius: var(--radius-pill);
   font-size: 0.72rem;
   font-weight: 600;
   color: var(--text-muted);
   cursor: pointer;
   transition: var(--transition-fast);
-  margin-bottom: 12px;
   max-width: 100%;
+  text-align: center;
 }
 
 .res-category-pill:hover {
