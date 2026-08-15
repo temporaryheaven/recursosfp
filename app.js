@@ -460,7 +460,7 @@ function renderUI() {
 function renderSlides() {
   const container = document.getElementById('slideViewport');
   const t = UI_TEXT[state.lang];
-  const heroBannerName = state.lang === 'ES' ? 'hero_banner_es.jpg' : 'hero_banner.jpg';
+  const heroBannerName = state.lang === 'ES' ? 'hero_banner_es.jpg?v=5.0' : 'hero_banner.jpg?v=5.0';
   let heroBannerSrc = `./assets/${heroBannerName}`;
   try {
     heroBannerSrc = new URL(`assets/${heroBannerName}`, document.baseURI).href;
