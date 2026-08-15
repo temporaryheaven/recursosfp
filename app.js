@@ -43,7 +43,7 @@ const UI_TEXT = {
     appTitle: 'Recursos para Formadores',
     appSubtitle: 'Formación Profesional y Educación de Adultos',
     viewSlides: 'Diapositivas',
-    viewExplorer: 'Explorador (77)',
+    viewExplorer: 'Explorador (78)',
     slideIndexTitle: 'Índice de Diapositivas',
     introBadge: 'Compendio Digital para Docentes',
     introTitle: 'Catálogo de Recursos Online para Formadores',
@@ -71,7 +71,8 @@ const UI_TEXT = {
     modalProposeTitle: 'Proponer Nuevo Recurso',
     modalProposeSubtitle: 'Propón una herramienta digital para incluirla en el compendio. Será revisada por un administrador antes de publicarse.',
     lblPropName: 'Nombre de la Herramienta *',
-    lblPropCategory: 'Categoría *',
+    lblPropCategory: 'Categoría (o TBD si no existe) *',
+    optCategoryTBD: 'TBD - Por determinar (Nueva categoría)',
     lblPropDifficulty: 'Nivel de Dificultad *',
     lblPropUrl: 'Sitio Web (URL) *',
     lblPropDescription: 'Descripción Corta *',
@@ -86,13 +87,15 @@ const UI_TEXT = {
     btnSubmit: 'Enviar Propuesta',
     submitting: 'Enviando propuesta...',
     successMsg: '¡Propuesta enviada con éxito! Queda pendiente de revisión por el administrador.',
-    errorMsg: 'Ocurrió un error al enviar la propuesta. Por favor intenta de nuevo.'
+    errorMsg: 'Ocurrió un error al enviar la propuesta. Por favor intenta de nuevo.',
+    themeDark: 'Oscuro',
+    themeLight: 'Claro'
   },
   EN: {
     appTitle: 'Resources for Educators',
     appSubtitle: 'Vocational & Adult Education',
     viewSlides: 'Slides',
-    viewExplorer: 'Explorer (77)',
+    viewExplorer: 'Explorer (78)',
     slideIndexTitle: 'Slide Index',
     introBadge: 'Digital Compendium for Educators',
     introTitle: 'Catalog of Online Resources for Trainers',
@@ -120,7 +123,8 @@ const UI_TEXT = {
     modalProposeTitle: 'Propose New Resource',
     modalProposeSubtitle: 'Propose a digital tool to include in the catalog. It will be reviewed by an administrator before publishing.',
     lblPropName: 'Tool Name *',
-    lblPropCategory: 'Category *',
+    lblPropCategory: 'Category (or TBD if not applicable) *',
+    optCategoryTBD: 'TBD - To be determined (New category)',
     lblPropDifficulty: 'Difficulty Level *',
     lblPropUrl: 'Website (URL) *',
     lblPropDescription: 'Short Description *',
@@ -135,7 +139,9 @@ const UI_TEXT = {
     btnSubmit: 'Submit Proposal',
     submitting: 'Submitting proposal...',
     successMsg: 'Proposal submitted successfully! Pending administrator review.',
-    errorMsg: 'An error occurred while submitting your proposal. Please try again.'
+    errorMsg: 'An error occurred while submitting your proposal. Please try again.',
+    themeDark: 'Dark',
+    themeLight: 'Light'
   }
 };
 
@@ -150,13 +156,42 @@ const state = {
   selectedCategory: 'ALL',
   selectedDifficulty: 'ALL',
   taxonomy: [],
-  resources: []
+  resources: [],
+  theme: localStorage.getItem('app_theme') || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark')
 };
 
 // Initialize Application reliably across all browsers & script loading timings
 function initApp() {
+  initTheme();
   initEventListeners();
   loadData(state.lang);
+}
+
+// Theme Switcher Logic (Dark / Light)
+function initTheme() {
+  applyTheme(state.theme);
+}
+
+function toggleTheme() {
+  state.theme = state.theme === 'dark' ? 'light' : 'dark';
+  localStorage.setItem('app_theme', state.theme);
+  applyTheme(state.theme);
+}
+
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  const iconEl = document.getElementById('themeIcon');
+  const labelEl = document.getElementById('themeLabel');
+  const t = UI_TEXT[state.lang];
+  if (iconEl && labelEl && t) {
+    if (theme === 'light') {
+      iconEl.textContent = '☀️';
+      labelEl.textContent = t.themeLight;
+    } else {
+      iconEl.textContent = '🌙';
+      labelEl.textContent = t.themeDark;
+    }
+  }
 }
 
 if (document.readyState === 'loading') {
@@ -175,6 +210,7 @@ function initEventListeners() {
   // Mode Switcher
   addSafeListener('btnViewSlides', 'click', () => setViewMode('slides'));
   addSafeListener('btnViewExplorer', 'click', () => setViewMode('explorer'));
+  addSafeListener('btnThemeToggle', 'click', toggleTheme);
 
   // Drawer Toggle
   addSafeListener('btnOpenDrawer', 'click', toggleDrawer);
@@ -250,7 +286,7 @@ async function loadData(lang) {
   // Try dynamic server fetch first (for HTTP/HTTPS web servers)
   for (const path of candidatePaths) {
     try {
-      const res = await fetch(path);
+      const res = await fetch(`${path}?_t=${Date.now()}`, { cache: 'no-cache' });
       if (res.ok) {
         const fetchedText = await res.text();
         // Verify response is actual Markdown content, not an HTML 404 page
@@ -404,7 +440,12 @@ function updateStaticUIText() {
 
   // Populate Propose Category Dropdown
   const propCatSelect = document.getElementById('propCategory');
-  propCatSelect.innerHTML = state.taxonomy.map(cat => `<option value="${cat.code}">${cat.code} - ${cat.name}</option>`).join('');
+  if (propCatSelect) {
+    propCatSelect.innerHTML = `<option value="TBD">${t.optCategoryTBD}</option>` +
+      state.taxonomy.map(cat => `<option value="${cat.code}">${cat.code} - ${cat.name}</option>`).join('');
+  }
+
+  applyTheme(state.theme);
 }
 
 // Main UI Render Controller
@@ -419,12 +460,16 @@ function renderUI() {
 function renderSlides() {
   const container = document.getElementById('slideViewport');
   const t = UI_TEXT[state.lang];
+  const heroBannerSrc = state.lang === 'ES' ? './assets/hero_banner_es.jpg' : './assets/hero_banner.jpg';
 
   let html = '';
 
   // Slide 0: Hero Intro
   html += `
     <div class="slide-content hero-slide ${state.currentSlideIndex === 0 ? 'active' : ''}">
+      <div class="hero-banner-container">
+        <img src="${heroBannerSrc}" alt="Educación Digital y Formación Profesional Banner" class="hero-banner-img">
+      </div>
       <span class="hero-tag">${t.introBadge}</span>
       <h1 class="hero-title">${t.introTitle}</h1>
       <p class="hero-subtitle">${t.introSubtitle}</p>
@@ -511,13 +556,24 @@ function renderSlides() {
 function renderResourceCard(r) {
   const t = UI_TEXT[state.lang];
   const diffClass = r.difficulty.toLowerCase();
+  const catObj = state.taxonomy.find(c => c.code === r.category);
+  const catIcon = getCategoryIcon(catObj);
+  const catName = catObj ? catObj.name : r.category;
+
   return `
     <div class="resource-card">
       <div>
+        <div class="res-category-pill" onclick="jumpToCategorySlide('${r.category}')" title="${catName}">
+          <span class="res-cat-icon">${catIcon}</span>
+          <span class="res-cat-code">${r.category}</span>
+          <span class="res-cat-label">• ${catName}</span>
+        </div>
+
         <div class="res-header">
           <h3 class="res-name">${r.name}</h3>
           <span class="difficulty-badge ${diffClass}">${r.difficulty}</span>
         </div>
+
         <p class="res-desc">${r.description}</p>
         <div class="res-example-box">
           <strong>${t.usageExample}</strong> ${r.example}
