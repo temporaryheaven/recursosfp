@@ -153,11 +153,17 @@ const state = {
   resources: []
 };
 
-// Initialize Application
-document.addEventListener('DOMContentLoaded', () => {
+// Initialize Application reliably across all browsers & script loading timings
+function initApp() {
   initEventListeners();
   loadData(state.lang);
-});
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initApp);
+} else {
+  initApp();
+}
 
 // Initialize DOM Event Listeners
 function initEventListeners() {
@@ -667,16 +673,28 @@ function toggleLanguage() {
 // Propose Modal Controller & Submission Logic
 function openProposeModal() {
   state.isProposeModalOpen = true;
-  document.getElementById('proposeBackdrop').classList.add('open');
+  const proposeBackdrop = document.getElementById('proposeBackdrop');
+  if (proposeBackdrop) {
+    proposeBackdrop.classList.add('open');
+  }
   const statusDiv = document.getElementById('proposeStatus');
-  statusDiv.className = 'form-status-msg';
-  statusDiv.style.display = 'none';
+  if (statusDiv) {
+    statusDiv.className = 'form-status-msg';
+    statusDiv.style.display = 'none';
+  }
 }
+
+window.openProposeModal = openProposeModal;
 
 function closeProposeModal() {
   state.isProposeModalOpen = false;
-  document.getElementById('proposeBackdrop').classList.remove('open');
+  const proposeBackdrop = document.getElementById('proposeBackdrop');
+  if (proposeBackdrop) {
+    proposeBackdrop.classList.remove('open');
+  }
 }
+
+window.closeProposeModal = closeProposeModal;
 
 async function handleProposalSubmit(e) {
   e.preventDefault();

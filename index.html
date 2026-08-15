@@ -7,7 +7,7 @@
   <title>Recursos para Formadores | SPA Option 1</title>
   
   <!-- Fonts & Stylesheet -->
-  <link rel="stylesheet" href="./styles.css?v=3.1">
+  <link rel="stylesheet" href="./styles.css?v=4.0">
 </head>
 <body>
 
@@ -38,7 +38,7 @@
       </div>
 
       <!-- Propose Resource Button -->
-      <button id="btnOpenPropose" class="lang-btn propose-btn" title="Proponer Recurso">
+      <button id="btnOpenPropose" class="lang-btn propose-btn" onclick="openProposeModal()" title="Proponer Recurso">
         ➕ <span id="txtProposeBtn">Proponer Recurso</span>
       </button>
 
@@ -115,7 +115,7 @@
     <div class="modal-panel">
       <div class="drawer-header">
         <h3><span id="modalProposeTitle">Proponer Nuevo Recurso</span></h3>
-        <button id="btnClosePropose" class="btn-close-drawer">✕</button>
+        <button id="btnClosePropose" class="btn-close-drawer" onclick="closeProposeModal()">✕</button>
       </div>
       <form id="proposeForm" class="propose-form">
         <p id="modalProposeSubtitle" class="form-desc">
@@ -168,7 +168,7 @@
         <div id="proposeStatus" class="form-status-msg"></div>
 
         <div class="form-actions">
-          <button type="button" id="btnCancelPropose" class="toggle-btn">Cancelar</button>
+          <button type="button" id="btnCancelPropose" class="toggle-btn" onclick="closeProposeModal()">Cancelar</button>
           <button type="submit" id="btnSubmitPropose" class="toggle-btn active submit-btn">
             <span>🚀</span> <span id="txtSubmitBtn">Enviar Propuesta</span>
           </button>
@@ -178,7 +178,7 @@
   </div>
 
   <!-- Application Logic -->
-  <script src="./embedded_data.js?v=3.1"></script>
-  <script src="./app.js?v=3.1"></script>
+  <script src="./embedded_data.js?v=4.0"></script>
+  <script src="./app.js?v=4.0"></script>
 </body>
 </html>
