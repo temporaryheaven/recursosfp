@@ -315,10 +315,33 @@ h1, h2, h3, h4, h5, h6 {
   transition: var(--transition-smooth);
 }
 
-.stat-card:hover {
+button.stat-card {
+  font-family: inherit;
+  text-align: center;
+  cursor: pointer;
+  width: 100%;
+  color: inherit;
+}
+
+.stat-card-interactive {
+  position: relative;
+  cursor: pointer;
+}
+
+.stat-card-interactive:hover {
   transform: translateY(-4px);
-  border-color: var(--border-highlight);
+  border-color: var(--primary-blue);
   box-shadow: var(--shadow-glow);
+  background: var(--bg-card-hover);
+}
+
+.stat-card-interactive:active {
+  transform: translateY(-1px);
+}
+
+.stat-card-interactive:focus-visible {
+  outline: 2px solid var(--primary-blue);
+  outline-offset: 2px;
 }
 
 .stat-number {

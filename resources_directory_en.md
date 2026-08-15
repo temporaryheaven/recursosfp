@@ -1,4 +1,4 @@
-# Free Online Resources for Trainers & Educators
+# Online Resources for Trainers & Educators
 
 ## Area of Application Taxonomy
 | Category Code | Area of Application | Description |

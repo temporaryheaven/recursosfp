@@ -1,4 +1,4 @@
-window.EMBEDDED_DATA_ES = `# Directorio de Recursos Online Gratuitos para Formadores
+window.EMBEDDED_DATA_ES = `# Directorio de Recursos Online para Formadores
 
 ## Taxonomía de Áreas de Aplicación
 | Código de Categoría | Área de Aplicación | Descripción |
@@ -99,7 +99,7 @@ window.EMBEDDED_DATA_ES = `# Directorio de Recursos Online Gratuitos para Formad
 | TST | UltiMaker Cura | Software de laminado (slicer) 3D de código abierto para preparar modelos CAD. | Laminar cajas e impresiones 3D para alojar circuitos y exportar el código G para el taller. | Fácil | https://ultimaker.com/software/ultimaker-cura |
 `;
 
-window.EMBEDDED_DATA_EN = `# Free Online Resources for Trainers & Educators
+window.EMBEDDED_DATA_EN = `# Online Resources for Trainers & Educators
 
 ## Area of Application Taxonomy
 | Category Code | Area of Application | Description |

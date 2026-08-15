@@ -36,15 +36,15 @@ function getCategoryIcon(cat) {
 
 const UI_TEXT = {
   ES: {
-    appTitle: 'Recursos Gratuitos para Formadores',
+    appTitle: 'Recursos para Formadores',
     appSubtitle: 'Formación Profesional y Educación de Adultos',
     viewSlides: 'Diapositivas',
     viewExplorer: 'Explorador (77)',
     slideIndexTitle: 'Índice de Diapositivas',
     introBadge: 'Compendio Digital para Docentes',
-    introTitle: 'Catálogo de Recursos Online Gratuitos para Formadores',
+    introTitle: 'Catálogo de Recursos Online para Formadores',
     introSubtitle: 'Herramientas digitales, software de simulación, repositorios multimedia sin copyright e Inteligencia Artificial aplicada a la Formación Profesional y Educación de Adultos.',
-    statTools: 'Herramientas Libres',
+    statTools: 'Recursos',
     statCategories: 'Áreas de Aplicación',
     statEducational: 'Uso Educativo Directo',
     catMapTitle: 'Categorías de Herramientas',
@@ -65,15 +65,15 @@ const UI_TEXT = {
     drawerMap: 'Taxonomía de Áreas de Aplicación'
   },
   EN: {
-    appTitle: 'Free Resources for Educators',
+    appTitle: 'Resources for Educators',
     appSubtitle: 'Vocational & Adult Education',
     viewSlides: 'Slides',
     viewExplorer: 'Explorer (77)',
     slideIndexTitle: 'Slide Index',
     introBadge: 'Digital Compendium for Educators',
-    introTitle: 'Catalog of Free Online Resources for Trainers',
+    introTitle: 'Catalog of Online Resources for Trainers',
     introSubtitle: 'Digital tools, simulation software, copyright-free media repositories, and Artificial Intelligence applied to Vocational and Adult Education.',
-    statTools: 'Free Tools',
+    statTools: 'Resources',
     statCategories: 'Application Areas',
     statEducational: 'Direct Educational Use',
     catMapTitle: 'Tool Categories',
@@ -190,6 +190,15 @@ async function loadData(lang) {
       }
     } catch (err) {
       // CORS block on file:// or network error
+    }
+  }
+
+  // Fallback to offline embedded data if fetch fails (e.g. file:// protocol CORS restrictions)
+  if (!text) {
+    const embeddedData = lang === 'ES' ? window.EMBEDDED_DATA_ES : window.EMBEDDED_DATA_EN;
+    if (embeddedData) {
+      console.log(`Using embedded offline dataset fallback for ${lang}`);
+      text = embeddedData;
     }
   }
 
@@ -325,14 +334,14 @@ function renderSlides() {
       <h1 class="hero-title">${t.introTitle}</h1>
       <p class="hero-subtitle">${t.introSubtitle}</p>
       <div class="stats-grid">
-        <div class="stat-card">
+        <button type="button" class="stat-card stat-card-interactive" onclick="setViewMode('explorer')" title="${state.lang === 'ES' ? 'Ir al Explorador de recursos' : 'Go to Resource Explorer'}">
           <div class="stat-number">${state.resources.length}</div>
           <div class="stat-label">${t.statTools}</div>
-        </div>
-        <div class="stat-card">
+        </button>
+        <button type="button" class="stat-card stat-card-interactive" onclick="jumpToSlide(1)" title="${state.lang === 'ES' ? 'Ir a Categorías de Herramientas' : 'Go to Tool Categories'}">
           <div class="stat-number">${state.taxonomy.length}</div>
           <div class="stat-label">${t.statCategories}</div>
-        </div>
+        </button>
         <div class="stat-card">
           <div class="stat-number">100%</div>
           <div class="stat-label">${t.statEducational}</div>

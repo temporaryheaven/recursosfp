@@ -1,4 +1,4 @@
-# Directorio de Recursos Online Gratuitos para Formadores
+# Directorio de Recursos Online para Formadores
 
 ## Taxonomía de Áreas de Aplicación
 | Código de Categoría | Área de Aplicación | Descripción |
