@@ -461,7 +461,10 @@ function renderSlides() {
   const container = document.getElementById('slideViewport');
   const t = UI_TEXT[state.lang];
   const heroBannerName = state.lang === 'ES' ? 'hero_banner_es.jpg' : 'hero_banner.jpg';
-  const heroBannerSrc = `./assets/${heroBannerName}`;
+  let heroBannerSrc = `./assets/${heroBannerName}`;
+  try {
+    heroBannerSrc = new URL(`assets/${heroBannerName}`, document.baseURI).href;
+  } catch (e) {}
 
   let html = '';
 
@@ -469,7 +472,7 @@ function renderSlides() {
   html += `
     <div class="slide-content hero-slide ${state.currentSlideIndex === 0 ? 'active' : ''}">
       <div class="hero-banner-container">
-        <img src="${heroBannerSrc}" onerror="if(!this.dataset.retry){this.dataset.retry='1';this.src='assets/${heroBannerName}';}" alt="Educación Digital y Formación Profesional Banner" class="hero-banner-img">
+        <img src="${heroBannerSrc}" onerror="if(!this.dataset.retry){this.dataset.retry='1';this.src='./assets/${heroBannerName}';}else if(this.dataset.retry==='1'){this.dataset.retry='2';this.src='assets/${heroBannerName}';}" alt="Educación Digital y Formación Profesional Banner" class="hero-banner-img">
       </div>
       <span class="hero-tag">${t.introBadge}</span>
       <h1 class="hero-title">${t.introTitle}</h1>
