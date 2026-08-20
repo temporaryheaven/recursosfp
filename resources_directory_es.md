@@ -1,15 +1,26 @@
 # Directorio de Recursos Online para Formadores
 
 ## Taxonomía de Áreas de Aplicación
-| Código de Categoría | Área de Aplicación | Descripción |
-| --- | --- | --- |
+
+
+| Código de Categoría | Área de Aplicación                                    | Descripción                                                                                                      |
+| --------------------- | ------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| ACC | Accesibilidad y Diseño Universal para el Aprendizaje | Tecnologías de asistencia, analizadores de contraste, lectores de pantalla, subtítulos y síntesis de voz. |
+| AGR | Agronomía de Precisión, Forestal y Gestión Ambiental | Herramientas SIG (QGIS), simuladores de cultivos, meteorología, calculadoras de riego y repositorios agrarios. |
 | AIA | Asistencia IA y Planificación de Clases | Motores de IA y generadores de prompts para programación didáctica, rúbricas y adaptación de contenidos. |
+| AUT | Automatización de Flujos de Trabajo y No-Code | Plataformas no-code, webhooks API, motores de integración (n8n, Make) y automatización de formularios. |
+| BAF | Administración de Empresas, Contabilidad y ERPs | Simuladores de ERP, facturación electrónica (Facturae), calculadoras fiscales y entornos contables. |
 | CWS | Espacios de Trabajo Colaborativo | Pizarras digitales, lienzos infinitos y entornos de colaboración en tiempo real para el aprendizaje activo. |
+| DAT | Análisis de Datos, Visualización y Business Intelligence | Paneles BI de código abierto, herramientas de exploración de datos, entornos SQL y gráficos interactivos. |
 | DEV | Desarrollo de Software y Herramientas Dev | Alojamiento de código, asistentes de IA para código, pruebas de API y entornos para desarrollo de software. |
 | FIB | Repositorios Multimedia y Banco de Imágenes | Bancos de imágenes libres de derechos, ilustraciones, vectores, iconos, audio y vídeo para material didáctico. |
+| HEA | Sanidad, Cuidados de Enfermería y Simulación Clínica | Atlas anatómicos 3D, pacientes virtuales, terminología médica y simuladores clínicos para ciclos sanitarios. |
+| HSE | Prevención de Riesgos Laborales (PRL) y Salud Laboral | Calculadoras de evaluación de riesgos, herramientas ergonómicas, matrices de EPIs y simuladores de PRL. |
 | IAG | Evaluación Interactiva y Gamificación | Generadores de cuestionarios, votaciones en directo y herramientas de aprendizaje basado en juegos. |
 | IDC | Diseño Instruccional y Creación de Contenidos | Creadores de presentaciones, mapas mentales, diagramación y diseño de contenidos multimedia. |
+| LAN | Aprendizaje de Idiomas y Traducción Multilingüe | Motores de traducción neuronal, entrenadores de pronunciación y glosarios técnicos para FP bilingüe. |
 | LMS | Gestión de Aula y Aprendizaje | Plataformas para la impartición de cursos, gestión de tareas y seguimiento del progreso del alumnado. |
+| LOG | Logística, Transporte y Gestión de Cadena de Suministro | Simuladores SGA de almacén, calculadoras de fletes y aduanas, planificadores de rutas y gestión de inventario. |
 | OER | Recursos Educativos Abiertos y Repositorios | Bibliotecas de libros de texto abiertos, planes de clase, cursos y recursos didácticos de acceso libre. |
 | REG | Regulación de FP y Catálogos Oficiales | Portales oficiales estatales y autonómicos sobre normativa de FP, catálogos de especialidades y registros. |
 | SEC | Cálculo y Diseño de Energía Solar | Software y herramientas web para simulación fotovoltaica, dimensionado solar térmico y viabilidad renovable. |
@@ -18,19 +29,45 @@
 
 ## Tabla del Directorio de Recursos
 
+
 | Área de Aplicación | Nombre | Descripción | Ejemplo de Uso Práctico | Dificultad | URL |
-| --- | --- | --- | --- | --- | --- |
-| AIA | Claude (Anthropic) | Asistente de IA avanzado con gran capacidad de razonamiento y amplia ventana de contexto. | Analizar el BOE de un certificado de profesionalidad para extraer resultados de aprendizaje. | Fácil | https://claude.ai |
+| ------------------ | ------ | ----------- | ----------------------- | ---------- | --- |
+| ACC | Colour Contrast Analyser (CCA) | Utilidad de escritorio para evaluar ratios de contraste de color según estándares WCAG 2.1. | Verificar el contraste accesible de paletas de color en diapositivas y guías de taller. | Fácil | https://www.tpgi.com/color-contrast-checker/ |
+| ACC | NaturalReader | Lector de texto a voz con voces naturales, velocidad regulable y tipografía adaptada a la dislexia. | Convertir apuntes y guías técnicas en audio para alumnado con dificultades lectoras. | Fácil | https://www.naturalreaders.com |
+| ACC | OpenDyslexic | Tipografía de código abierto diseñada para facilitar la lectura a personas con dislexia. | Aplicar fuentes de fácil lectura en exámenes, fichas didácticas y presentaciones de clase. | Fácil | https://opendyslexic.org |
+| ACC | SpeechNotes | Bloc de notas con dictado por voz en tiempo real y soporte multilingüe en el navegador. | Dictar resúmenes de clase y transcribir presentaciones orales del alumnado en directo. | Fácil | https://speechnotes.co |
+| ACC | WAVE Web Accessibility Tool | Extensión y herramienta web para auditar el cumplimiento de accesibilidad y contraste WCAG. | Auditar páginas web de proyectos de alumnos o diapositivas digitales para verificar accesibilidad. | Fácil | https://wave.webaim.org |
+| AGR | Copernicus Browser | Portal satelital de la Agencia Espacial Europea con imágenes ópticas y de radar gratuitas. | Calcular índices de vegetación NDVI para evaluar el vigor y humedad de cultivos agrícolas. | Media | https://browser.dataspace.copernicus.eu |
+| AGR | CROPWAT (FAO) | Herramienta de la FAO para el cálculo de necesidades hídricas de cultivos y programas de riego. | Dimensionar turnos de riego y volúmenes de agua a partir de datos climáticos y de suelo. | Media | https://www.fao.org/land-water/databases-and-software/cropwat/en/ |
+| AGR | PlantNet (Pl@ntNet) | Plataforma de ciencia ciudadana e IA para la identificación botánica mediante fotografías. | Realizar inventarios botánicos e identificación de especies en prácticas de campo. | Fácil | https://plantnet.org |
+| AGR | QGIS | Sistema de Información Geográfica (SIG) libre para mapeo espacial y análisis territorial. | Superponer mapas de suelos y capas vectoriales de parcelas para planificar riego de precisión. | Media | https://qgis.org |
+| AGR | SoilGrids | Sistema global de cartografía digital de suelos con perfiles y propiedades físico-químicas. | Consultar perfiles de carbono orgánico y pH para la evaluación agronómica de parcelas. | Fácil | https://soilgrids.org |
 | AIA | ChatGPT (OpenAI) | Modelo de IA conversacional para redactar planes de clase, casos prácticos y cuestionarios. | Generar 10 preguntas de diagnóstico con explicación paso a paso para un taller técnico. | Fácil | https://chatgpt.com |
+| AIA | Claude (Anthropic) | Asistente de IA avanzado con gran capacidad de razonamiento y amplia ventana de contexto. | Analizar el BOE de un certificado de profesionalidad para extraer resultados de aprendizaje. | Fácil | https://claude.ai |
 | AIA | Diffit | Genera lecturas adaptadas, resúmenes y hojas de trabajo graduadas por niveles. | Adaptar un texto técnico complejo a tres niveles de lectura para un grupo heterogéneo. | Fácil | https://web.diffit.me |
 | AIA | Google Gemini | Asistente de IA multimodal capaz de analizar texto, imágenes, código y PDFs. | Subir la ficha técnica en PDF de un componente y generar una hoja de práctica de laboratorio. | Fácil | https://gemini.google.com |
 | AIA | MagicSchool AI | Plataforma de IA diseñada para docentes para crear rúbricas, exámenes y unidades. | Crear una rúbrica analítica de 4 niveles para evaluar una práctica de montaje de taller. | Fácil | https://www.magicschool.ai |
 | AIA | Microsoft Copilot | Asistente de IA integrado con búsqueda web y Microsoft 365 para resúmenes y diapositivas. | Resumir artículos de actualidad tecnológica en una ficha de debate para clase. | Fácil | https://copilot.microsoft.com |
 | AIA | Perplexity AI | Motor de búsqueda conversacional que aporta fuentes y citas web en tiempo real. | Buscar normativas industriales actualizadas y especificaciones de hardware para las diapositivas. | Fácil | https://www.perplexity.ai |
+| AUT | AppSheet (Google) | Motor no-code que transforma hojas de cálculo en aplicaciones móviles interactivas. | Desarrollar una app móvil de checklist para que el alumnado inspeccione maquinaria del taller. | Media | https://about.appsheet.com |
+| AUT | Baserow | Base de datos no-code de código abierto con vistas de hoja de cálculo y API REST. | Crear un sistema de inventario y préstamo de herramientas y material de laboratorio del taller. | Fácil | https://baserow.io |
+| AUT | Make | Entorno visual de automatización para conectar aplicaciones en la nube, APIs y webhooks. | Diseñar un flujo automático para volcar respuestas de formularios a hojas de cálculo estructuradas. | Fácil | https://www.make.com |
+| AUT | n8n | Plataforma de automatización de código abierto y flujos de trabajo basada en nodos. | Automatizar avisos de entregas de tareas entre webhooks y canales de comunicación del curso. | Media | https://n8n.io |
+| AUT | NocoDB | Plataforma que transforma bases de datos SQL en hojas de cálculo colaborativas no-code. | Enseñar relaciones entre tablas y gestión de datos sin necesidad de escribir sentencias SQL. | Media | https://nocodb.com |
+| BAF | Facturae | Aplicación oficial del Ministerio para generar, firmar y validar facturas electrónicas. | Practicar la emisión reglamentaria de facturas electrónicas en formato XML para B2G y B2B. | Media | https://www.facturae.gob.es |
+| BAF | GnuCash | Software libre de contabilidad por partida doble para gestión financiera de pymes. | Realizar asientos contables, conciliación bancaria y balances de sumas y saldos. | Media | https://www.gnucash.org |
+| BAF | Holded Academy | Plataforma de gestión empresarial en la nube con recursos formativos para pymes. | Practicar la gestión moderna de facturación, cobros, pagos y tesorería en la nube. | Fácil | https://www.holded.com |
+| BAF | Odoo Community Edition | Suite ERP de código abierto con módulos de ventas, compras, facturación y contabilidad. | Simular ciclos comerciales completos de aprovisionamiento y venta en ciclos de administración. | Media | https://www.odoo.com |
 | CWS | AnswerGarden | Plataforma minimalista de lluvia de ideas instantánea mediante nubes de palabras. | Recoger conocimientos previos de los alumnos sobre un tema con una sola pregunta abierta. | Fácil | https://answergarden.ch |
 | CWS | FigJam | Pizarra blanca colaborativa para lluvia de ideas, diagramas y dinámicas ágiles. | Realizar una retrospectiva de proyecto de curso con notas adhesivas y votaciones. | Media | https://www.figma.com/figjam |
 | CWS | Miro | Lienzo visual infinito para colaboración en tiempo real, mapas conceptuales y diagramas. | Desarrollar una sesión de lluvia de ideas sobre arquitectura de un sistema con notas adhesivas. | Media | https://miro.com |
 | CWS | Padlet | Muro digital para compartir notas multimedia, archivos y aportaciones del alumnado. | Crear un muro donde los alumnos publican enlaces e imágenes de sus montajes de prácticas. | Fácil | https://padlet.com |
+| DAT | GeoGebra | Suite de matemáticas dinámicas que combina geometría, álgebra, cálculo, estadística y gráficos 3D. | Visualizar vectores, trigonometría aplicada y modelado geométrico para ciclos técnicos e industriales. | Fácil | https://www.geogebra.org |
+| DAT | Google Looker Studio | Herramienta de business intelligence y cuadros de mando visuales conectada a fuentes de datos. | Diseñar dashboards interactivos de ventas o seguimiento de indicadores en proyectos de clase. | Fácil | https://lookerstudio.google.com |
+| DAT | Kaggle | Comunidad de ciencia de datos con cuadernos Jupyter en la nube y datasets abiertos. | Trabajar con datasets reales para prácticas de limpieza de datos, estadística y análisis exploratorio. | Fácil | https://www.kaggle.com |
+| DAT | Metabase (Open Source) | Herramienta BI de código abierto para realizar consultas visuales sobre bases de datos SQL. | Aprender a explorar bases de datos y construir paneles analíticos sin escribir código complejo. | Media | https://www.metabase.com |
+| DAT | RAWGraphs | Framework de código abierto para generar gráficos vectoriales complejos a partir de tablas. | Crear diagramas avanzados (Sankey, treemaps, aluviales) para memorias técnicas de proyectos. | Fácil | https://www.rawgraphs.io |
+| DAT | SQLBolt | Tutorial interactivo en navegador con ejercicios guiados de consultas SQL. | Aprender sintaxis básica y avanzada de SQL (SELECT, JOIN, GROUP BY) con ejercicios interactivos. | Fácil | https://sqlbolt.com |
 | DEV | Docker Hub | Registro global de imágenes de contenedores para despliegue de aplicaciones. | Obtener contenedores preconfigurados de bases de datos o servidores para laboratorios. | Media | https://hub.docker.com |
 | DEV | GitHub | Plataforma de alojamiento de código para control de versiones y trabajo colaborativo con Git. | Alojar los repositorios de código de los alumnos y evaluar sus entregas de proyectos. | Media | https://github.com |
 | DEV | Google Antigravity | Plataforma asistida por IA para arquitectura de software y herramientas de desarrollo. | Mostrar arquitecturas modernas en la nube y diseño de software en clases de programación. | Media | https://antigravity.google |
@@ -49,8 +86,20 @@
 | FIB | The Noun Project | Más de 5 millones de iconos minimalistas y símbolos visuales gratuitos. | Descargar iconos técnicos (sensores, relés, microcontroladores) para esquemas propios. | Fácil | https://thenounproject.com |
 | FIB | Unsplash | Banco de imágenes de alta resolución creadas por una comunidad global de fotógrafos. | Obtener imágenes de portada impactantes para la plataforma del curso y presentaciones. | Fácil | https://unsplash.com |
 | FIB | Wikimedia Commons | Base de datos de más de 100 millones de archivos multimedia de uso libre. | Ilustrar conceptos históricos de la electricidad o física con esquemas científicos originales. | Media | https://commons.wikimedia.org |
+| HEA | AnatomyZone | Atlas en vídeo 3D y tutoriales interactivos de anatomía musculoesquelética y visceral. | Estudiar relaciones anatómicas espaciales y trayectos vasculares en modelos tridimensionales. | Fácil | https://anatomyzone.com |
+| HEA | BioDigital Human | Plataforma 3D interactiva de anatomía humana, fisiología y patologías clínicas. | Explorar modelos 3D interactivos de sistemas corporales y patologías en clases de sanidad. | Fácil | https://www.biodigital.com |
+| HEA | CDC Public Health Image Library | Biblioteca de imágenes clínicas, microscopía médica y gráficos de salud pública del CDC. | Obtener microfotografías de patógenos y fotos clínicas reales para presentaciones docentes. | Fácil | https://phil.cdc.gov |
+| HEA | MedlinePlus | Base de datos médica de la Biblioteca Nacional de Medicina de EE.UU. con monografías de fármacos. | Consultar guías farmacológicas, interacciones de medicamentos y fichas de salud para pacientes. | Fácil | https://medlineplus.gov |
+| HEA | OpenWHO | Plataforma de formación interactiva de la OMS sobre protocolos clínicos y salud pública. | Formar al alumnado en precauciones universales de control de infecciones y bioseguridad. | Fácil | https://openwho.org |
+| HSE | Colección de Películas Napo | Cortometrajes animados y fichas didácticas sobre prevención de riesgos laborales. | Introducir conceptos de seguridad (riesgo químico, caídas, orden y limpieza) de forma amena. | Fácil | https://www.napofilm.net |
+| HSE | Ergonautas (UPV) | Portal de ergonomía de la UPV con calculadoras de métodos NIOSH, RULA, REBA y OWAS. | Evaluar el nivel de riesgo ergonómico y límites de carga en puestos de trabajo simulados. | Media | https://www.ergonautas.upv.es |
+| HSE | EU-OSHA | Portal de la Agencia Europea para la Seguridad y Salud en el Trabajo con guías sectoriales. | Analizar campañas europeas de prevención y normativas de etiquetado de sustancias peligrosas. | Fácil | https://osha.europa.eu |
+| HSE | INSST — Portal de Prevención (PRL) | Portal técnico del Instituto Nacional de Seguridad y Salud en el Trabajo con NTPs y calculadores. | Consultar Notas Técnicas de Prevención (NTP) para diseñar protocolos de seguridad de taller. | Fácil | https://www.insst.es |
+| HSE | OiRA (Evaluación Interactiva de Riesgos) | Herramienta web europea para realizar evaluaciones de riesgos laborales paso a paso por sector. | Guiar al alumnado en la elaboración de una evaluación de riesgos laborales sectorial completa. | Fácil | https://oiraproject.eu |
 | IAG | Baamboozle | Plataforma de juegos educativos que solo requiere una pantalla para toda la clase. | Realizar un juego rápido de preguntas de repaso de 5 minutos al inicio de la sesión. | Fácil | https://www.baamboozle.com |
 | IAG | Blooket | Juegos de repaso basados en acción con múltiples modos de juego interactivos. | Transformar un cuestionario en un juego de defensa de torres para repasar un examen. | Fácil | https://www.blooket.com |
+| IAG | EducaPlay | EducaPlay permite crear una gran variedad de juegos aplicables a la educación, como crucigramas, preguntas y respuestas, juegos de memoria, etc. | EducaPlay motiva y hace partcipes a los estudiantes para transformar el contenido de las clases en juegos en muy poco tiempo.i | Fácil | https://educaplay.com |
+| IAG | Hot Potatoes | Hot Potatoes incluye seis aplicaciones, permitiéndote crear ejercicios interactivos de elección múltiple, respuesta corta, barajar frases, crucigramas, juego de emparejar/ordenar y rellenar huecos para la World Wide Web. | Crear juegos con contenido relacionado con el curso para que los estudiantes aprendan y trabajen con los conceptos de manera que se comprendan bien. | Media | https://hotpot.uvic.ca/ |
 | IAG | Kahoot! | Plataforma de aprendizaje basada en juegos para cuestionarios interactivos en directo. | Realizar una evaluación formativa al final de una unidad didáctica para comprobar la asimilación. | Fácil | https://kahoot.com |
 | IAG | Quizizz | Cuestionarios a ritmo del alumno con retroalimentación instantánea y reports detallados. | Asignar cuestionarios de repaso para que los alumnos los respondan desde su móvil. | Fácil | https://quizizz.com |
 | IDC | Coggle | Herramienta intuitiva de mapas mentales para esquemas visuales y árboles de conceptos. | Diseñar un diagrama de flujo de un protocolo de seguridad en el trabajo técnico. | Fácil | https://coggle.it |
@@ -65,8 +114,18 @@
 | IDC | Slidev | Generador de diapositivas web diseñado para desarrolladores a partir de Markdown. | Presentar bloques de código ejecutables e interactivos en demostraciones técnicas. | Media | https://sli.dev |
 | IDC | TeeTree Office | Suite de utilidades ligeras para maquetación rápida de documentos visuales. | Formatear notas de clase y guías rápidas de consulta en formato imprimible. | Fácil | https://www.steema.com |
 | IDC | XMind | Software profesional de mapas mentales para estructurar temas complejos y currículos. | Estructurar la programación didáctica completa de un curso de 80 horas en módulos y UFs. | Fácil | https://xmind.app |
+| LAN | DeepL Traductor y Write | Traductor neuronal y asistente de redacción con alta precisión en lenguaje técnico. | Traducir manuales técnicos y mejorar la redacción formal de correspondencia en otros idiomas. | Fácil | https://www.deepl.com |
+| LAN | IATE (Terminología UE) | Base de datos terminológica interinstitucional de la UE en 24 idiomas oficiales. | Consultar equivalencias terminológicas oficiales en ingeniería, comercio, derecho y sanidad. | Fácil | https://iate.europa.eu |
+| LAN | Linguee | Diccionario contextual que busca en millones de textos bilingües traducidos por profesionales. | Identificar expresiones y giros idiomáticos técnicos en contextos corporativos reales. | Fácil | https://www.linguee.com |
+| LAN | WordReference | Diccionario multilingüe, foros de dudas idiomáticas y conjugador verbal. | Resolver dudas de vocabulario especializado y matices de traducción técnica. | Fácil | https://www.wordreference.com |
+| LAN | YouGlish | Buscador de pronunciación en YouTube que reproduce fragmentos con palabras técnicas en contexto. | Escuchar pronunciaciones reales en inglés o francés de términos técnicos y vocabulario de taller. | Fácil | https://youglish.com |
 | LMS | Canvas Free for Teacher | LMS gratuito en la nube para crear cursos, módulos y gestionar calificaciones. | Configurar la estructura de un certificado de profesionalidad con entregas y rúbricas. | Media | https://www.instructure.com/canvas |
 | LMS | Google Classroom | Entorno virtual de aprendizaje sencillo e integrado con Google Workspace. | Distribuir guías de laboratorio, recoger tareas escritas y compartir avisos con el aula. | Fácil | https://classroom.google.com |
+| LOG | Flightradar24 | Servicio de seguimiento de vuelos en tiempo real para análisis de rutas de carga aérea. | Estudiar rutas de transporte aéreo de mercancías y tiempos de rotación en aeropuertos hub. | Fácil | https://www.flightradar24.com |
+| LOG | MarineTraffic | Plataforma de seguimiento marítimo en tiempo real con posiciones AIS y llegadas a puerto. | Monitorizar buques portacontenedores y analizar rutas de transporte marítimo internacional. | Fácil | https://www.marinetraffic.com |
+| LOG | OpenRouteService | Motor de enrutamiento y matrices de distancia basado en OpenStreetMap para logística. | Calcular rutas óptimas de reparto y áreas de cobertura basadas en tiempos de conducción. | Media | https://openrouteservice.org |
+| LOG | SeaRates Freight Tools | Calculadora de fletes internacionales y rastreo multimodal de contenedores marítimos. | Simular presupuestos de flete internacional, tiempos de tránsito y rutas logísticas completas. | Fácil | https://www.searates.com |
+| LOG | TARIC Consulta (AEAT y UE) | Base de datos oficial del arancel aduanero integrado para clasificación de mercancías. | Practicar la clasificación arancelaria de productos (códigos TARIC) y cálculo de aranceles e IVA. | Media | https://ec.europa.eu/taxation_customs/dds2/taric/taric_consultation.jsp |
 | OER | Edutopia | Banco de estrategias e investigación educativa de la Lucas Educational Foundation. | Encontrar estrategias docentes probadas para el aprendizaje basado en proyectos en adultos. | Fácil | https://www.edutopia.org |
 | OER | OER Commons | Biblioteca digital pública de recursos educativos abiertos y planes de clase. | Descargar recursos didácticos con licencia abierta para módulos de prevención de riesgos. | Fácil | https://www.oercommons.org |
 | OER | OpenStax | Libros de texto universitarios y de FP con licencia libre y revisión por pares. | Recomendar manuales gratuitos de física o matemáticas para nivelar al alumnado. | Fácil | https://openstax.org |
@@ -97,4 +156,3 @@
 | TST | QElectrotech | Software CAD libre para dibujo de esquemas eléctricos, hidráulicos y neumáticos. | Dibujar esquemas multifilares de cuadros eléctricos e instalaciones industriales. | Media | https://qelectrotech.org |
 | TST | REBT.studio | Herramienta web para cálculo de instalaciones eléctricas según el REBT español. | Calcular secciones de cable, caídas de tensión y protecciones en baja tensión. | Fácil | https://rebt.studio |
 | TST | UltiMaker Cura | Software de laminado (slicer) 3D de código abierto para preparar modelos CAD. | Laminar cajas e impresiones 3D para alojar circuitos y exportar el código G para el taller. | Fácil | https://ultimaker.com/software/ultimaker-cura |
-| IAG | Hot Potatoes | Hot Potatoes incluye seis aplicaciones, permitiéndote crear ejercicios interactivos de elección múltiple, respuesta corta, barajar frases, crucigramas, juego de emparejar/ordenar y rellenar huecos para la World Wide Web. | Crear juegos con contenido relacionado con el curso para que los estudiantes aprendan y trabajen con los conceptos de manera que se comprendan bien. | Media | https://hotpot.uvic.ca/ |

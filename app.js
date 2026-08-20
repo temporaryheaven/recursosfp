@@ -4,18 +4,32 @@
    ========================================================================== */
 
 const CATEGORY_ICONS = {
+  ACC: '♿',
+  AGR: '🌱',
   AIA: '🧠',
+  AUD: '🎙️',
+  AUT: '⚡',
+  BAF: '📊',
   CWS: '👥',
+  CYB: '🛡️',
+  DAT: '📈',
   DEV: '💻',
   FIB: '🖼️',
+  HEA: '🩺',
+  HSE: '🦺',
   IAG: '🎮',
   IDC: '🎨',
+  LAN: '🗣️',
   LMS: '🎓',
+  LOG: '📦',
   OER: '📚',
+  PMT: '📋',
   REG: '📜',
   SEC: '☀️',
   TOU: '🌍',
-  TST: '⚙️'
+  TST: '⚙️',
+  VID: '🎥',
+  VRE: '🥽'
 };
 
 // Helper function to resolve category icon
