@@ -8,7 +8,9 @@
   
   <!-- Favicon, Fonts & Stylesheet -->
   <link rel="icon" type="image/svg+xml" href="./favicon.svg">
-  <link rel="stylesheet" href="./styles.css?v=5.0">
+  <link rel="stylesheet" href="./styles.css?v=5.1">
+  <!-- Google Identity Services for Google Drive OAuth Sync -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
 
@@ -35,6 +37,9 @@
         </button>
         <button id="btnViewExplorer" class="toggle-btn">
           <span>🗂️</span> <span id="txtViewExplorer">Explorador (78)</span>
+        </button>
+        <button id="btnViewFavorites" class="toggle-btn">
+          <span>⭐</span> <span id="txtViewFavorites">Favoritos (0)</span>
         </button>
       </div>
 
@@ -98,6 +103,44 @@
 
       <div id="explorerGrid" class="explorer-grid">
         <!-- 77 Resource Cards Rendered by app.js -->
+      </div>
+    </div>
+
+    <!-- 3. Favorites View Mode -->
+    <div id="favoritesView" class="explorer-view favorites-view">
+      <div class="explorer-toolbar favorites-toolbar">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="favSearchInput" class="search-input" placeholder="Buscar en favoritos...">
+        </div>
+
+        <div class="filter-group">
+          <select id="favFilterCategory" class="select-filter">
+            <option value="ALL">Todas las categorías</option>
+          </select>
+
+          <button id="btnOpenBackup" class="lang-btn backup-btn" onclick="openBackupModal()" title="Copia de Seguridad / Sincronización">
+            ☁️ <span id="txtBackupBtn">Sincronizar / Copia</span>
+          </button>
+
+          <button id="btnClearFavorites" class="lang-btn clear-btn" onclick="confirmClearFavorites()" title="Limpiar todos los favoritos">
+            🗑️ <span id="txtClearBtn">Limpiar</span>
+          </button>
+        </div>
+      </div>
+
+      <div id="favoritesGrid" class="explorer-grid">
+        <!-- Favorited Resource Cards Rendered by app.js -->
+      </div>
+
+      <!-- Empty State for Favorites -->
+      <div id="favoritesEmptyState" class="favorites-empty-state" style="display: none;">
+        <div class="empty-icon">⭐</div>
+        <h3 id="txtFavEmptyTitle">Sin favoritos guardados</h3>
+        <p id="txtFavEmptyDesc">Explora el catálogo y haz clic en la estrella de cualquier recurso para guardarlo aquí y tenerlo siempre a mano.</p>
+        <button type="button" class="toggle-btn active empty-cta-btn" onclick="setViewMode('explorer')">
+          <span>🗂️</span> <span id="txtFavEmptyBtn">Explorar Recursos</span>
+        </button>
       </div>
     </div>
 
@@ -183,8 +226,124 @@
     </div>
   </div>
 
+  <!-- Backup & Sync Modal Overlay -->
+  <div id="backupBackdrop" class="drawer-backdrop">
+    <div class="modal-panel backup-modal-panel">
+      <div class="drawer-header">
+        <h3><span id="modalBackupTitle">Copia de Seguridad y Sincronización</span></h3>
+        <button id="btnCloseBackup" class="btn-close-drawer" onclick="closeBackupModal()">✕</button>
+      </div>
+      
+      <div class="backup-content">
+        <p id="modalBackupSubtitle" class="form-desc">
+          Guarda y restaura tus recursos favoritos en Google Drive o transfiérelos entre dispositivos sin perder tu selección.
+        </p>
+
+        <!-- Google Drive Section -->
+        <div class="backup-section gdrive-section">
+          <div class="section-title-row">
+            <span class="gdrive-logo">
+              <svg width="20" height="20" viewBox="0 0 87.3 78" xmlns="http://www.w3.org/2000/svg"><path d="m6.6 66.85 3.85 6.65c.8 1.4 1.95 2.5 3.3 3.3l13.75-23.8h-27.5c0 1.55.4 3.1 1.2 4.5z" fill="#0066da"/><path d="m43.65 25-13.75-23.8c-1.35.8-2.5 1.9-3.3 3.3l-25.4 44.05c-.8 1.4-1.2 2.95-1.2 4.5h27.5z" fill="#00ac47"/><path d="m73.55 76.8c1.35-.8 2.5-1.9 3.3-3.3l1.6-2.75 7.65-13.25c.8-1.4 1.2-2.95 1.2-4.5h-27.502l5.852 11.5z" fill="#ea4335"/><path d="m43.65 25 13.75-23.8c-1.35-.8-2.9-1.2-4.5-1.2h-18.5c-1.6 0-3.15.45-4.5 1.2z" fill="#00832d"/><path d="m59.8 53h-32.3l-13.75 23.8c1.35.8 2.9 1.2 4.5 1.2h50.8c1.6 0 3.15-.45 4.5-1.2z" fill="#2684fc"/><path d="m73.4 26.5-12.7-22c-.8-1.4-1.95-2.5-3.3-3.3l-13.75 23.8 16.15 28h27.45c0-1.55-.4-3.1-1.2-4.5z" fill="#ffba00"/></svg>
+            </span>
+            <strong id="txtGDriveTitle">Google Drive (Nube)</strong>
+          </div>
+          <p id="txtGDriveDesc" class="backup-subtext">Sincroniza directamente con tu cuenta de Google.</p>
+          <div class="gdrive-actions">
+            <button type="button" id="btnSaveGDrive" class="gdrive-btn" onclick="saveFavoritesToGoogleDrive()">
+              <span>☁️</span> <span id="txtBtnSaveGDrive">Guardar en Google Drive</span>
+            </button>
+            <button type="button" id="btnRestoreGDrive" class="gdrive-btn secondary" onclick="restoreFavoritesFromGoogleDrive()">
+              <span>📥</span> <span id="txtBtnRestoreGDrive">Restaurar de Google Drive</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Restore Mode Selector (Applies to Google Drive, File and Code restore) -->
+        <div class="restore-mode-bar">
+          <span class="restore-mode-title" id="lblRestoreMode">⚙️ Modo al restaurar:</span>
+          <div class="restore-mode-options">
+            <label class="radio-label">
+              <input type="radio" name="restoreMergeMode" value="merge" checked>
+              <span id="txtMergeModeMerge">Combinar con actuales</span>
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="restoreMergeMode" value="replace">
+              <span id="txtMergeModeReplace">Sobrescribir / Reemplazar todo</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Tabbed Secondary Options -->
+        <div class="backup-tabs">
+          <button type="button" class="backup-tab-btn active" id="tabBtnExport" onclick="switchBackupTab('export')">
+            <span id="txtTabExport">Exportar</span>
+          </button>
+          <button type="button" class="backup-tab-btn" id="tabBtnImport" onclick="switchBackupTab('import')">
+            <span id="txtTabImport">Importar</span>
+          </button>
+        </div>
+
+        <!-- Export Tab Content -->
+        <div id="tabContentExport" class="tab-content active">
+          <div class="backup-action-card">
+            <div>
+              <strong id="txtExportJSONTitle">Archivo JSON</strong>
+              <p id="txtExportJSONDesc" class="backup-subtext">Descarga un archivo con tus favoritos para guardarlo donde quieras.</p>
+            </div>
+            <button type="button" class="toggle-btn" onclick="exportFavoritesJSON()">
+              💾 <span id="txtBtnExportJSON">Descargar Archivo</span>
+            </button>
+          </div>
+
+          <div class="backup-action-card">
+            <div>
+              <strong id="txtExportLinkTitle">Enlace Portátil (URL)</strong>
+              <p id="txtExportLinkDesc" class="backup-subtext">Abre este enlace en otro dispositivo para cargar tus favoritos al instante.</p>
+            </div>
+            <button type="button" class="toggle-btn" onclick="copySyncLink()">
+              🔗 <span id="txtBtnCopyLink">Copiar Enlace</span>
+            </button>
+          </div>
+
+          <div class="backup-action-card">
+            <div>
+              <strong id="txtExportCodeTitle">Código de Respaldo</strong>
+              <p id="txtExportCodeDesc" class="backup-subtext">Copia un texto compacto para enviártelo por mensaje o notas.</p>
+            </div>
+            <button type="button" class="toggle-btn" onclick="copySyncCode()">
+              📋 <span id="txtBtnCopyCode">Copiar Código</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Import Tab Content -->
+        <div id="tabContentImport" class="tab-content">
+          <div class="import-dropzone" onclick="document.getElementById('importFileInput').click()">
+            <span>📁</span>
+            <p id="txtDropzonePrompt">Haz clic para seleccionar tu archivo JSON de respaldo</p>
+            <input type="file" id="importFileInput" accept=".json" style="display: none;" onchange="handleFileImport(event)">
+          </div>
+
+          <div class="form-group" style="margin-top: 14px;">
+            <label for="importCodeInput" id="lblImportCode">O pega un código / enlace de respaldo:</label>
+            <div class="input-with-btn">
+              <input type="text" id="importCodeInput" class="search-input" placeholder="VET-FAV:... o https://...">
+              <button type="button" class="toggle-btn active" onclick="handleCodeImport()">
+                <span id="txtBtnApplyImport">Restaurar</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Status Message Box -->
+        <div id="backupStatus" class="form-status-msg" style="display: none;"></div>
+
+      </div>
+    </div>
+  </div>
+
   <!-- Application Logic -->
-  <script src="./embedded_data.js?v=5.0"></script>
-  <script src="./app.js?v=5.0"></script>
+  <script src="./embedded_data.js?v=5.1"></script>
+  <script src="./app.js?v=5.1"></script>
 </body>
 </html>
