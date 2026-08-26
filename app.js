@@ -47,7 +47,9 @@ function getCategoryIcon(cat) {
 }
 
 // Google Apps Script Web App Endpoint URL for Resource Proposals
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzGwp1XYOUuFYzmfbDg9zPDoMca2ioGWcG__K4ShJdkk11rAKNe4rQ2l_XDpAf-QXTY/exec';
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxyr2tAlAVOfuZwQfJsFMmW4_RhTbkZ7RyyaFuMdycymdcIwbkt5mBga_jrdJnxYZ01/exec'
+
+//old 'https://script.google.com/macros/s/AKfycbzGwp1XYOUuFYzmfbDg9zPDoMca2ioGWcG__K4ShJdkk11rAKNe4rQ2l_XDpAf-QXTY/exec';
 
 // Google Drive OAuth 2.0 Web Client ID
 let GOOGLE_DRIVE_CLIENT_ID = localStorage.getItem('vet_custom_gdrive_client_id') || '428111596741-e02ns1rk7t5f7cr61pumjlms1vqqrvgd.apps.googleusercontent.com';
@@ -109,6 +111,25 @@ const UI_TEXT = {
     submitting: 'Enviando propuesta...',
     successMsg: '¡Propuesta enviada con éxito! Queda pendiente de revisión por el administrador.',
     errorMsg: 'Ocurrió un error al procesar la solicitud. Por favor intenta de nuevo.',
+    // Feedback & Suggestions Modal
+    btnFeedback: 'Feedback',
+    modalFeedbackTitle: 'Enviar Sugerencia o Feedback',
+    modalFeedbackSubtitle: 'Propón nuevas funciones, cambios, mejoras o reporta incidencias sobre la aplicación al administrador.',
+    lblFbType: 'Tipo de Aportación *',
+    optFbFeature: '💡 Nueva Funcionalidad',
+    optFbImprovement: '🛠️ Mejora o Cambio',
+    optFbBug: '🐛 Reporte de Error',
+    optFbGeneral: '💬 Comentario General',
+    lblFbSubject: 'Asunto / Título *',
+    phFbSubject: 'Resumen breve de tu sugerencia...',
+    lblFbMessage: 'Descripción Detallada *',
+    phFbMessage: 'Explica tu idea, mejora o el problema encontrado con el mayor detalle posible...',
+    lblFbEmail: 'Tu Correo Electrónico (Opcional)',
+    phFbEmail: 'tu-email@ejemplo.com (si deseas recibir respuesta)',
+    btnSubmitFeedback: 'Enviar Mensaje',
+    feedbackSubmitting: 'Enviando mensaje...',
+    feedbackSuccessMsg: '¡Mensaje enviado con éxito! Muchas gracias por colaborar en la mejora de la aplicación.',
+    feedbackErrorMsg: 'Ocurrió un error al enviar tu mensaje. Por favor intenta de nuevo.',
     themeDark: 'Oscuro',
     themeLight: 'Claro',
     // Favorites & Backup
@@ -210,6 +231,25 @@ const UI_TEXT = {
     submitting: 'Submitting proposal...',
     successMsg: 'Proposal submitted successfully! Pending administrator review.',
     errorMsg: 'An error occurred while processing your request. Please try again.',
+    // Feedback & Suggestions Modal
+    btnFeedback: 'Feedback',
+    modalFeedbackTitle: 'Send Suggestion or Feedback',
+    modalFeedbackSubtitle: 'Propose new features, changes, improvements, or report issues directly to the administrator.',
+    lblFbType: 'Feedback Type *',
+    optFbFeature: '💡 Feature Request',
+    optFbImprovement: '🛠️ Improvement or Change',
+    optFbBug: '🐛 Bug Report',
+    optFbGeneral: '💬 General Feedback',
+    lblFbSubject: 'Subject / Title *',
+    phFbSubject: 'Brief summary of your suggestion...',
+    lblFbMessage: 'Detailed Description *',
+    phFbMessage: 'Explain your idea, improvement, or the issue found with as much detail as possible...',
+    lblFbEmail: 'Your Email (Optional)',
+    phFbEmail: 'your-email@example.com (if you wish to receive a reply)',
+    btnSubmitFeedback: 'Send Feedback',
+    feedbackSubmitting: 'Sending feedback...',
+    feedbackSuccessMsg: 'Message sent successfully! Thank you for helping improve the application.',
+    feedbackErrorMsg: 'An error occurred while sending your message. Please try again.',
     themeDark: 'Dark',
     themeLight: 'Light',
     // Favorites & Backup
@@ -268,6 +308,7 @@ const state = {
   currentSlideIndex: 0, // 0 = Intro, 1 = Map, 2..N = Category Slides
   isDrawerOpen: false,
   isProposeModalOpen: false,
+  isFeedbackModalOpen: false,
   isBackupModalOpen: false,
   searchQuery: '',
   selectedCategory: 'ALL',
@@ -401,6 +442,10 @@ function initEventListeners() {
   // Keyboard Shortcuts
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
+      if (state.isFeedbackModalOpen) {
+        closeFeedbackModal();
+        return;
+      }
       if (state.isBackupModalOpen) {
         closeBackupModal();
         return;
@@ -415,7 +460,7 @@ function initEventListeners() {
       }
     }
 
-    if (state.viewMode === 'slides' && !state.isProposeModalOpen && !state.isDrawerOpen && !state.isBackupModalOpen) {
+    if (state.viewMode === 'slides' && !state.isProposeModalOpen && !state.isFeedbackModalOpen && !state.isDrawerOpen && !state.isBackupModalOpen) {
       if (e.key === 'ArrowLeft') prevSlide();
       if (e.key === 'ArrowRight') nextSlide();
     }
@@ -429,6 +474,15 @@ function initEventListeners() {
     if (e.target === document.getElementById('proposeBackdrop')) closeProposeModal();
   });
   addSafeListener('proposeForm', 'submit', handleProposalSubmit);
+
+  // Feedback Modal Event Listeners
+  addSafeListener('btnOpenFeedback', 'click', openFeedbackModal);
+  addSafeListener('btnCloseFeedback', 'click', closeFeedbackModal);
+  addSafeListener('btnCancelFeedback', 'click', closeFeedbackModal);
+  addSafeListener('feedbackBackdrop', 'click', (e) => {
+    if (e.target === document.getElementById('feedbackBackdrop')) closeFeedbackModal();
+  });
+  addSafeListener('feedbackForm', 'submit', handleFeedbackSubmit);
 
   // Backup Modal Backdrop Click
   addSafeListener('backupBackdrop', 'click', (e) => {
@@ -681,6 +735,40 @@ function updateStaticUIText() {
       state.taxonomy.map(cat => `<option value="${cat.code}">${cat.code} - ${cat.name}</option>`).join('');
   }
 
+  // Feedback Modal UI Text
+  const txtFeedbackBtn = document.getElementById('txtFeedbackBtn');
+  if (txtFeedbackBtn) txtFeedbackBtn.textContent = t.btnFeedback;
+  const modalFeedbackTitle = document.getElementById('modalFeedbackTitle');
+  if (modalFeedbackTitle) modalFeedbackTitle.textContent = t.modalFeedbackTitle;
+  const modalFeedbackSubtitle = document.getElementById('modalFeedbackSubtitle');
+  if (modalFeedbackSubtitle) modalFeedbackSubtitle.textContent = t.modalFeedbackSubtitle;
+  const lblFbType = document.getElementById('lblFbType');
+  if (lblFbType) lblFbType.textContent = t.lblFbType;
+  const optFbFeature = document.getElementById('optFbFeature');
+  if (optFbFeature) optFbFeature.textContent = t.optFbFeature;
+  const optFbImprovement = document.getElementById('optFbImprovement');
+  if (optFbImprovement) optFbImprovement.textContent = t.optFbImprovement;
+  const optFbBug = document.getElementById('optFbBug');
+  if (optFbBug) optFbBug.textContent = t.optFbBug;
+  const optFbGeneral = document.getElementById('optFbGeneral');
+  if (optFbGeneral) optFbGeneral.textContent = t.optFbGeneral;
+  const lblFbSubject = document.getElementById('lblFbSubject');
+  if (lblFbSubject) lblFbSubject.textContent = t.lblFbSubject;
+  const fbSubject = document.getElementById('fbSubject');
+  if (fbSubject) fbSubject.placeholder = t.phFbSubject;
+  const lblFbMessage = document.getElementById('lblFbMessage');
+  if (lblFbMessage) lblFbMessage.textContent = t.lblFbMessage;
+  const fbMessage = document.getElementById('fbMessage');
+  if (fbMessage) fbMessage.placeholder = t.phFbMessage;
+  const lblFbEmail = document.getElementById('lblFbEmail');
+  if (lblFbEmail) lblFbEmail.textContent = t.lblFbEmail;
+  const fbEmail = document.getElementById('fbEmail');
+  if (fbEmail) fbEmail.placeholder = t.phFbEmail;
+  const btnCancelFeedback = document.getElementById('btnCancelFeedback');
+  if (btnCancelFeedback) btnCancelFeedback.textContent = t.btnCancel;
+  const txtSubmitFeedbackBtn = document.getElementById('txtSubmitFeedbackBtn');
+  if (txtSubmitFeedbackBtn) txtSubmitFeedbackBtn.textContent = t.btnSubmitFeedback;
+
   applyTheme(state.theme);
 }
 
@@ -702,7 +790,7 @@ function renderSlides() {
   let heroBannerSrc = `./assets/${heroBannerName}`;
   try {
     heroBannerSrc = new URL(`assets/${heroBannerName}`, document.baseURI).href;
-  } catch (e) {}
+  } catch (e) { }
 
   let html = '';
 
@@ -743,9 +831,9 @@ function renderSlides() {
       <p class="subtitle">${t.catMapSubtitle}</p>
       <div class="category-grid">
         ${state.taxonomy.map(cat => {
-          const count = state.resources.filter(r => r.category === cat.code).length;
-          const icon = getCategoryIcon(cat);
-          return `
+    const count = state.resources.filter(r => r.category === cat.code).length;
+    const icon = getCategoryIcon(cat);
+    return `
             <div class="category-card" onclick="jumpToCategorySlide('${cat.code}')">
               <div>
                 <div class="cat-header-top">
@@ -761,7 +849,7 @@ function renderSlides() {
               </div>
             </div>
           `;
-        }).join('')}
+  }).join('')}
       </div>
     </div>
   `;
@@ -1162,6 +1250,92 @@ async function handleProposalSubmit(e) {
     console.error('Error submitting proposal to Google Sheet:', err);
     statusDiv.className = 'form-status-msg error';
     statusDiv.textContent = t.errorMsg;
+  } finally {
+    submitBtn.disabled = false;
+  }
+}
+
+// Feedback & Suggestions Modal Controller
+function openFeedbackModal() {
+  state.isFeedbackModalOpen = true;
+  const feedbackBackdrop = document.getElementById('feedbackBackdrop');
+  if (feedbackBackdrop) {
+    feedbackBackdrop.classList.add('open');
+    feedbackBackdrop.style.display = 'flex';
+  }
+  const statusDiv = document.getElementById('feedbackStatus');
+  if (statusDiv) {
+    statusDiv.className = 'form-status-msg';
+    statusDiv.style.display = 'none';
+  }
+}
+
+window.openFeedbackModal = openFeedbackModal;
+
+function closeFeedbackModal() {
+  state.isFeedbackModalOpen = false;
+  const feedbackBackdrop = document.getElementById('feedbackBackdrop');
+  if (feedbackBackdrop) {
+    feedbackBackdrop.classList.remove('open');
+    feedbackBackdrop.style.display = 'none';
+  }
+}
+
+window.closeFeedbackModal = closeFeedbackModal;
+
+async function handleFeedbackSubmit(e) {
+  e.preventDefault();
+  const t = UI_TEXT[state.lang];
+  const submitBtn = document.getElementById('btnSubmitFeedback');
+  const statusDiv = document.getElementById('feedbackStatus');
+
+  const formData = {
+    type: 'feedback',
+    feedbackType: document.getElementById('fbType').value,
+    subject: document.getElementById('fbSubject').value.trim(),
+    message: document.getElementById('fbMessage').value.trim(),
+    email: document.getElementById('fbEmail').value.trim(),
+    context: {
+      viewMode: state.viewMode,
+      activeSlideIndex: state.currentSlideIndex,
+      lang: state.lang
+    },
+    submittedAt: new Date().toISOString(),
+    lang: state.lang
+  };
+
+  submitBtn.disabled = true;
+  statusDiv.style.display = 'block';
+  statusDiv.className = 'form-status-msg loading';
+  statusDiv.textContent = t.feedbackSubmitting;
+
+  if (!GOOGLE_SCRIPT_URL) {
+    setTimeout(() => {
+      statusDiv.className = 'form-status-msg success';
+      statusDiv.textContent = t.feedbackSuccessMsg;
+      submitBtn.disabled = false;
+      document.getElementById('feedbackForm').reset();
+    }, 700);
+    return;
+  }
+
+  try {
+    await fetch(GOOGLE_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {
+        'Content-Type': 'text/plain;charset=utf-8'
+      },
+      body: JSON.stringify(formData)
+    });
+
+    statusDiv.className = 'form-status-msg success';
+    statusDiv.textContent = t.feedbackSuccessMsg;
+    document.getElementById('feedbackForm').reset();
+  } catch (err) {
+    console.error('Error submitting feedback to Google Sheet:', err);
+    statusDiv.className = 'form-status-msg error';
+    statusDiv.textContent = t.feedbackErrorMsg;
   } finally {
     submitBtn.disabled = false;
   }
@@ -1582,7 +1756,7 @@ function handleCodeImport() {
         inputEl.value = '';
         return;
       }
-    } catch (e) {}
+    } catch (e) { }
   }
 
   if (val.startsWith('VET-FAV:')) {
@@ -1600,7 +1774,7 @@ function handleCodeImport() {
     applyFavoritesImport(items, mergeMode);
     inputEl.value = '';
     return;
-  } catch (e) {}
+  } catch (e) { }
 
   showBackupStatus(UI_TEXT[state.lang].restoreInvalid, 'error');
 }
