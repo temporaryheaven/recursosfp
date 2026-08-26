@@ -1,5 +1,7 @@
 /* ==========================================================================
    Resources Directory SPA - Option 1 Design System & Styles
+   Version: 1.0
+   Updated: 2026-08-26
    Theme: Dark Glassmorphic Navy (#0b132b, #1c2541, #3a506b, #4cc9f0, #4361ee)
    ========================================================================== */
 
@@ -1268,6 +1270,26 @@ button.stat-card {
 .propose-btn:hover {
   background: linear-gradient(135deg, rgba(58, 134, 255, 0.4), rgba(76, 201, 240, 0.4));
   box-shadow: var(--shadow-glow);
+}
+
+.feedback-btn {
+  background: linear-gradient(135deg, rgba(114, 9, 183, 0.2), rgba(67, 97, 238, 0.2));
+  border: 1px solid rgba(114, 9, 183, 0.35);
+  color: var(--text-main);
+  transition: var(--transition-fast);
+}
+
+.feedback-btn:hover {
+  background: linear-gradient(135deg, rgba(114, 9, 183, 0.4), rgba(67, 97, 238, 0.4));
+  box-shadow: 0 0 20px rgba(114, 9, 183, 0.3);
+}
+
+.feedback-submit-btn {
+  background: linear-gradient(135deg, var(--accent-purple), var(--primary-blue)) !important;
+}
+
+.feedback-submit-btn:hover {
+  box-shadow: 0 0 20px rgba(114, 9, 183, 0.4) !important;
 }
 
 /* Favorites View Toolbar & Action Buttons */

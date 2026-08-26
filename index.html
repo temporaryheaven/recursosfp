@@ -1,3 +1,8 @@
+<!-- ==========================================================================
+   Resources Directory SPA - Main HTML Entry Point
+   Version: 1.0
+   Updated: 2026-08-26
+   ========================================================================== -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -8,7 +13,7 @@
   
   <!-- Favicon, Fonts & Stylesheet -->
   <link rel="icon" type="image/svg+xml" href="./favicon.svg">
-  <link rel="stylesheet" href="./styles.css?v=5.1">
+  <link rel="stylesheet" href="./styles.css?v=1.0">
   <!-- Google Identity Services for Google Drive OAuth Sync -->
   <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
@@ -46,6 +51,11 @@
       <!-- Propose Resource Button -->
       <button id="btnOpenPropose" class="lang-btn propose-btn" onclick="openProposeModal()" title="Proponer Recurso">
         ➕ <span id="txtProposeBtn">Proponer Recurso</span>
+      </button>
+
+      <!-- Feedback / Suggestions Button -->
+      <button id="btnOpenFeedback" class="lang-btn feedback-btn" onclick="openFeedbackModal()" title="Feedback / Sugerencias">
+        💬 <span id="txtFeedbackBtn">Feedback</span>
       </button>
 
       <!-- Slide Drawer Toggle -->
@@ -226,6 +236,55 @@
     </div>
   </div>
 
+  <!-- Feedback & Suggestions Modal Overlay -->
+  <div id="feedbackBackdrop" class="drawer-backdrop">
+    <div class="modal-panel">
+      <div class="drawer-header">
+        <h3><span id="modalFeedbackTitle">Enviar Sugerencia o Feedback</span></h3>
+        <button id="btnCloseFeedback" class="btn-close-drawer" onclick="closeFeedbackModal()">✕</button>
+      </div>
+      <form id="feedbackForm" class="propose-form">
+        <p id="modalFeedbackSubtitle" class="form-desc">
+          Propón nuevas funciones, cambios, mejoras o reporta incidencias sobre la aplicación al administrador.
+        </p>
+
+        <div class="form-group">
+          <label for="fbType" id="lblFbType">Tipo de Aportación *</label>
+          <select id="fbType" required class="select-filter">
+            <option value="feature" id="optFbFeature">💡 Nueva Funcionalidad</option>
+            <option value="improvement" id="optFbImprovement">🛠️ Mejora o Cambio</option>
+            <option value="bug" id="optFbBug">🐛 Reporte de Error</option>
+            <option value="general" id="optFbGeneral">💬 Comentario General</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="fbSubject" id="lblFbSubject">Asunto / Título *</label>
+          <input type="text" id="fbSubject" required class="search-input" placeholder="Resumen breve de tu sugerencia...">
+        </div>
+
+        <div class="form-group">
+          <label for="fbMessage" id="lblFbMessage">Descripción Detallada *</label>
+          <textarea id="fbMessage" rows="4" required class="search-input form-textarea" placeholder="Explica tu idea, mejora o el problema encontrado con el mayor detalle posible..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="fbEmail" id="lblFbEmail">Tu Correo Electrónico (Opcional)</label>
+          <input type="email" id="fbEmail" class="search-input" placeholder="tu-email@ejemplo.com (si deseas recibir respuesta)">
+        </div>
+
+        <div id="feedbackStatus" class="form-status-msg"></div>
+
+        <div class="form-actions">
+          <button type="button" id="btnCancelFeedback" class="toggle-btn" onclick="closeFeedbackModal()">Cancelar</button>
+          <button type="submit" id="btnSubmitFeedback" class="toggle-btn active submit-btn feedback-submit-btn">
+            <span>🚀</span> <span id="txtSubmitFeedbackBtn">Enviar Mensaje</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- Backup & Sync Modal Overlay -->
   <div id="backupBackdrop" class="drawer-backdrop">
     <div class="modal-panel backup-modal-panel">
@@ -343,7 +402,7 @@
   </div>
 
   <!-- Application Logic -->
-  <script src="./embedded_data.js?v=5.1"></script>
-  <script src="./app.js?v=5.1"></script>
+  <script src="./embedded_data.js?v=1.0"></script>
+  <script src="./app.js?v=1.0"></script>
 </body>
 </html>

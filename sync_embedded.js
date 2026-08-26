@@ -15,7 +15,16 @@ try {
   const esMd = fs.readFileSync(esPath, 'utf8');
   const enMd = fs.readFileSync(enPath, 'utf8');
 
-  const content = `window.EMBEDDED_DATA_ES = ${JSON.stringify(esMd)};\n\nwindow.EMBEDDED_DATA_EN = ${JSON.stringify(enMd)};\n`;
+  const content = `/* ==========================================================================
+   Embedded Resources Directory Data (Offline & Fallback)
+   Version: 1.0
+   Updated: 2026-08-26
+   ========================================================================== */
+
+window.EMBEDDED_DATA_ES = ${JSON.stringify(esMd)};
+
+window.EMBEDDED_DATA_EN = ${JSON.stringify(enMd)};
+`;
 
   fs.writeFileSync(outputPath, content, 'utf8');
   console.log('✓ embedded_data.js successfully synchronized with Markdown files!');

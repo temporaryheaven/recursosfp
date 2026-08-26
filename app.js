@@ -1,5 +1,7 @@
 /* ==========================================================================
    Resources Directory SPA - Application Logic & State Controller
+   Version: 1.0
+   Updated: 2026-08-26
    Vanilla ES6 JavaScript Module with Direct Runtime Markdown Fetching,
    Offline Fallback, Google Drive OAuth & Cross-Device Favorites Sync
    ========================================================================== */
