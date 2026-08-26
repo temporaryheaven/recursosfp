@@ -149,6 +149,9 @@ const UI_TEXT = {
     gdriveRestored: '¡Favoritos restaurados desde tu Google Drive!',
     gdriveNotFound: 'No se encontró el archivo de copia previa en tu Google Drive.',
     gdriveNeedClientId: 'Configura tu Google Client ID para habilitar la sincronización directa con Google Drive.',
+    gdriveSaveError: 'Error al guardar en Google Drive: {detail}',
+    gdriveRestoreError: 'Error al restaurar de Google Drive: {detail}',
+    gdriveAuthError: 'Error de autenticación con Google: {detail}',
     syncPromptIncoming: 'Se han detectado {count} favoritos en este enlace. ¿Deseas cargarlos en tu aplicación?',
     restoreSuccess: '¡Favoritos restaurados con éxito! ({count} favoritos guardados)',
     restoreSuccessReplaced: '¡Favoritos sobrescritos con éxito! ({count} favoritos guardados)',
@@ -247,6 +250,9 @@ const UI_TEXT = {
     gdriveRestored: 'Favourites successfully restored from your Google Drive!',
     gdriveNotFound: 'No previous backup found in your Google Drive.',
     gdriveNeedClientId: 'Please configure your Google Client ID to enable direct Google Drive sync.',
+    gdriveSaveError: 'Error saving to Google Drive: {detail}',
+    gdriveRestoreError: 'Error restoring from Google Drive: {detail}',
+    gdriveAuthError: 'Google authentication error: {detail}',
     syncPromptIncoming: '{count} favourites detected in this link. Would you like to load them?',
     restoreSuccess: 'Favourites restored successfully! ({count} saved)',
     restoreSuccessReplaced: 'Favourites overwritten successfully! ({count} saved)',
@@ -1219,6 +1225,37 @@ function showBackupStatus(msg, type = 'success') {
   }
 }
 
+// Helper to extract detailed Google Drive API error messages
+async function extractDriveApiError(res, contextMsg) {
+  let detail = '';
+  try {
+    const data = await res.json();
+    if (data && data.error) {
+      if (typeof data.error === 'string') {
+        detail = data.error;
+      } else if (data.error.message) {
+        detail = data.error.message;
+        if (data.error.errors && Array.isArray(data.error.errors) && data.error.errors.length > 0) {
+          const reason = data.error.errors[0].reason;
+          if (reason && !detail.includes(reason)) {
+            detail += ` [${reason}]`;
+          }
+        }
+      }
+    }
+  } catch (e) {
+    try {
+      detail = await res.text();
+    } catch (e2) {
+      detail = res.statusText || `HTTP ${res.status}`;
+    }
+  }
+  if (!detail) {
+    detail = res.statusText || `HTTP ${res.status}`;
+  }
+  return `${contextMsg} (${res.status}): ${detail}`;
+}
+
 // Google Drive OAuth 2.0 (Google Identity Services)
 function initGoogleDriveOAuth(onSuccess) {
   const t = UI_TEXT[state.lang];
@@ -1240,8 +1277,8 @@ function initGoogleDriveOAuth(onSuccess) {
   if (typeof google === 'undefined' || !google.accounts || !google.accounts.oauth2) {
     showBackupStatus(
       state.lang === 'ES'
-        ? 'El servicio Google Identity no está cargado. Comprueba tu conexión a Internet.'
-        : 'Google Identity SDK is not loaded. Please check your network connection.',
+        ? 'El servicio Google Identity SDK no se pudo cargar. Comprueba tu conexión a Internet o extensiones de bloqueo.'
+        : 'Google Identity SDK could not be loaded. Please check your network connection or ad-blockers.',
       'error'
     );
     return;
@@ -1261,7 +1298,9 @@ function initGoogleDriveOAuth(onSuccess) {
       callback: (tokenResponse) => {
         if (tokenResponse.error) {
           console.error('Google OAuth token error:', tokenResponse);
-          showBackupStatus(`${t.errorMsg} (${tokenResponse.error_description || tokenResponse.error})`, 'error');
+          const errorMsg = tokenResponse.error_description || tokenResponse.error;
+          const template = t.gdriveAuthError || `${t.errorMsg} ({detail})`;
+          showBackupStatus(template.replace('{detail}', errorMsg), 'error');
           return;
         }
         googleAccessToken = tokenResponse.access_token;
@@ -1274,7 +1313,9 @@ function initGoogleDriveOAuth(onSuccess) {
     tokenClient.requestAccessToken({ prompt: '' });
   } catch (err) {
     console.error('Failed to request Google OAuth token', err);
-    showBackupStatus(t.errorMsg, 'error');
+    const detailMsg = err && err.message ? err.message : String(err);
+    const template = t.gdriveAuthError || `${t.errorMsg} ({detail})`;
+    showBackupStatus(template.replace('{detail}', detailMsg), 'error');
   }
 }
 
@@ -1292,66 +1333,104 @@ async function saveFavoritesToGoogleDrive() {
       };
       const jsonStr = JSON.stringify(backupData, null, 2);
 
-      // Search for existing file
+      // 1. Search for existing file
       const searchRes = await fetch(
         `https://www.googleapis.com/drive/v3/files?q=name%3D%27vet_favoritos_backup.json%27+and+trashed%3Dfalse&fields=files(id%2Cname)`,
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
-      const searchData = await searchRes.json();
-      const existingFile = searchData.files && searchData.files.length > 0 ? searchData.files[0] : null;
+      if (!searchRes.ok) {
+        if (searchRes.status === 401) googleAccessToken = null;
+        const context = state.lang === 'ES' ? 'Error buscando archivo en Google Drive' : 'Error searching Drive file';
+        const errDetail = await extractDriveApiError(searchRes, context);
+        throw new Error(errDetail);
+      }
 
-      if (existingFile) {
-        // Update existing file
+      const searchData = await searchRes.json();
+      let fileId = searchData.files && searchData.files.length > 0 ? searchData.files[0].id : null;
+      let uploadSuccess = false;
+
+      // 2. If existing file found, try updating its content directly
+      if (fileId) {
         const updateRes = await fetch(
-          `https://www.googleapis.com/upload/drive/v3/files/${existingFile.id}?uploadType=media`,
+          `https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=media`,
           {
             method: 'PATCH',
             headers: {
               Authorization: `Bearer ${accessToken}`,
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json; charset=UTF-8'
             },
             body: jsonStr
           }
         );
-        if (!updateRes.ok) throw new Error(`Drive update error: ${updateRes.statusText}`);
-      } else {
-        // Create new file
-        const metadata = {
-          name: 'vet_favoritos_backup.json',
-          mimeType: 'application/json',
-          description: 'Copia de seguridad de recursos favoritos - VET Resources SPA'
-        };
-        const boundary = '-------314159265358979323846';
-        const delimiter = `\r\n--${boundary}\r\n`;
-        const closeDelimiter = `\r\n--${boundary}--`;
+        if (updateRes.ok) {
+          uploadSuccess = true;
+        } else if (updateRes.status === 401) {
+          googleAccessToken = null;
+          const context = state.lang === 'ES' ? 'Error de autenticación al actualizar archivo' : 'Authentication error updating file';
+          throw new Error(await extractDriveApiError(updateRes, context));
+        } else if (updateRes.status !== 404 && updateRes.status !== 403) {
+          const context = state.lang === 'ES' ? 'Error actualizando archivo en Google Drive' : 'Error updating Drive file';
+          throw new Error(await extractDriveApiError(updateRes, context));
+        }
+        // If 404 or 403, we fall through to create a new file
+      }
 
-        const multipartBody =
-          delimiter +
-          'Content-Type: application/json; charset=UTF-8\r\n\r\n' +
-          JSON.stringify(metadata) +
-          delimiter +
-          'Content-Type: application/json\r\n\r\n' +
-          jsonStr +
-          closeDelimiter;
+      // 3. If file didn't exist or update failed with 404/403, create file metadata and upload content
+      if (!uploadSuccess) {
+        const createMetaRes = await fetch('https://www.googleapis.com/drive/v3/files', {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'application/json; charset=UTF-8'
+          },
+          body: JSON.stringify({
+            name: 'vet_favoritos_backup.json',
+            mimeType: 'application/json',
+            description: 'Copia de seguridad de recursos favoritos - VET Resources SPA'
+          })
+        });
 
-        const createRes = await fetch(
-          'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart',
+        if (!createMetaRes.ok) {
+          if (createMetaRes.status === 401) googleAccessToken = null;
+          const context = state.lang === 'ES' ? 'Error creando archivo en Google Drive' : 'Error creating Drive file';
+          const errDetail = await extractDriveApiError(createMetaRes, context);
+          throw new Error(errDetail);
+        }
+
+        const newFileData = await createMetaRes.json();
+        fileId = newFileData.id;
+
+        const uploadNewRes = await fetch(
+          `https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=media`,
           {
-            method: 'POST',
+            method: 'PATCH',
             headers: {
               Authorization: `Bearer ${accessToken}`,
-              'Content-Type': `multipart/related; boundary=${boundary}`
+              'Content-Type': 'application/json; charset=UTF-8'
             },
-            body: multipartBody
+            body: jsonStr
           }
         );
-        if (!createRes.ok) throw new Error(`Drive create error: ${createRes.statusText}`);
+
+        if (!uploadNewRes.ok) {
+          if (uploadNewRes.status === 401) googleAccessToken = null;
+          const context = state.lang === 'ES' ? 'Error guardando datos en Google Drive' : 'Error saving data to Drive';
+          const errDetail = await extractDriveApiError(uploadNewRes, context);
+          throw new Error(errDetail);
+        }
       }
 
       showBackupStatus(t.gdriveSaved, 'success');
     } catch (err) {
       console.error('Error saving to Google Drive:', err);
-      showBackupStatus(t.errorMsg, 'error');
+      let detailMsg = err && err.message ? err.message : String(err);
+      if (detailMsg.toLowerCase().includes('failed to fetch')) {
+        detailMsg = state.lang === 'ES'
+          ? 'Error de red o conexión bloqueada (CORS). Comprueba tu conexión o que tu URL esté en los orígenes autorizados de Google Cloud.'
+          : 'Network error or CORS block. Check your connection or Authorized JavaScript origins in Google Cloud Console.';
+      }
+      const template = t.gdriveSaveError || `${t.errorMsg} ({detail})`;
+      showBackupStatus(template.replace('{detail}', detailMsg), 'error');
     }
   });
 }
@@ -1367,6 +1446,13 @@ async function restoreFavoritesFromGoogleDrive() {
         `https://www.googleapis.com/drive/v3/files?q=name%3D%27vet_favoritos_backup.json%27+and+trashed%3Dfalse&fields=files(id%2Cname)`,
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
+      if (!searchRes.ok) {
+        if (searchRes.status === 401) googleAccessToken = null;
+        const context = state.lang === 'ES' ? 'Error buscando copia en Google Drive' : 'Error searching backup in Google Drive';
+        const errDetail = await extractDriveApiError(searchRes, context);
+        throw new Error(errDetail);
+      }
+
       const searchData = await searchRes.json();
       if (!searchData.files || searchData.files.length === 0) {
         showBackupStatus(t.gdriveNotFound, 'error');
@@ -1378,13 +1464,20 @@ async function restoreFavoritesFromGoogleDrive() {
         `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`,
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
-      if (!fileRes.ok) throw new Error(`Failed to download backup: ${fileRes.statusText}`);
+      if (!fileRes.ok) {
+        if (fileRes.status === 401) googleAccessToken = null;
+        const context = state.lang === 'ES' ? 'Error descargando archivo de Google Drive' : 'Error downloading file from Google Drive';
+        const errDetail = await extractDriveApiError(fileRes, context);
+        throw new Error(errDetail);
+      }
       const backupData = await fileRes.json();
       const mergeMode = document.querySelector('input[name="restoreMergeMode"]:checked')?.value || 'merge';
       applyFavoritesImport(backupData.favorites || backupData, mergeMode);
     } catch (err) {
       console.error('Error restoring from Google Drive:', err);
-      showBackupStatus(t.errorMsg, 'error');
+      const detailMsg = err && err.message ? err.message : String(err);
+      const template = t.gdriveRestoreError || `${t.errorMsg} ({detail})`;
+      showBackupStatus(template.replace('{detail}', detailMsg), 'error');
     }
   });
 }

@@ -1232,6 +1232,8 @@ button.stat-card {
   padding: 12px 16px;
   border-radius: var(--radius-sm);
   font-size: 0.85rem;
+  line-height: 1.45;
+  word-break: break-word;
   display: none;
 }
 
