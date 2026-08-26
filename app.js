@@ -1319,6 +1319,35 @@ function initGoogleDriveOAuth(onSuccess) {
   }
 }
 
+async function uploadToGoogleDrive(accessToken, fileId, jsonStr) {
+  const metadata = {
+    name: 'vet_favoritos_backup.json',
+    mimeType: 'application/json',
+    description: 'Copia de seguridad de recursos favoritos - VET Resources SPA'
+  };
+
+  const form = new FormData();
+  form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
+  form.append('file', new Blob([jsonStr], { type: 'application/json' }));
+
+  const url = fileId
+    ? `https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=multipart`
+    : `https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart`;
+
+  const method = fileId ? 'PATCH' : 'POST';
+
+  console.log(`[GoogleDrive] Enviando ${method} a: ${url}`);
+
+  return await fetch(url, {
+    method: method,
+    headers: {
+      Authorization: `Bearer ${accessToken}`
+      // Note: No Content-Type header set manually; the browser creates multipart/form-data with the correct boundary
+    },
+    body: form
+  });
+}
+
 async function saveFavoritesToGoogleDrive() {
   const t = UI_TEXT[state.lang];
   initGoogleDriveOAuth(async (accessToken) => {
@@ -1334,90 +1363,54 @@ async function saveFavoritesToGoogleDrive() {
       const jsonStr = JSON.stringify(backupData, null, 2);
 
       // 1. Search for existing file
-      const searchRes = await fetch(
-        `https://www.googleapis.com/drive/v3/files?q=name%3D%27vet_favoritos_backup.json%27+and+trashed%3Dfalse&fields=files(id%2Cname)`,
-        { headers: { Authorization: `Bearer ${accessToken}` } }
-      );
-      if (!searchRes.ok) {
-        if (searchRes.status === 401) googleAccessToken = null;
-        const context = state.lang === 'ES' ? 'Error buscando archivo en Google Drive' : 'Error searching Drive file';
-        const errDetail = await extractDriveApiError(searchRes, context);
-        throw new Error(errDetail);
-      }
-
-      const searchData = await searchRes.json();
-      let fileId = searchData.files && searchData.files.length > 0 ? searchData.files[0].id : null;
-      let uploadSuccess = false;
-
-      // 2. If existing file found, try updating its content directly
-      if (fileId) {
-        const updateRes = await fetch(
-          `https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=media`,
-          {
-            method: 'PATCH',
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-              'Content-Type': 'application/json; charset=UTF-8'
-            },
-            body: jsonStr
-          }
+      let existingFileId = null;
+      try {
+        const searchRes = await fetch(
+          `https://www.googleapis.com/drive/v3/files?q=name%3D%27vet_favoritos_backup.json%27+and+trashed%3Dfalse&fields=files(id%2Cname)`,
+          { headers: { Authorization: `Bearer ${accessToken}` } }
         );
-        if (updateRes.ok) {
-          uploadSuccess = true;
-        } else if (updateRes.status === 401) {
+        if (searchRes.ok) {
+          const searchData = await searchRes.json();
+          if (searchData.files && searchData.files.length > 0) {
+            existingFileId = searchData.files[0].id;
+            console.log('[GoogleDrive] Archivo previo encontrado ID:', existingFileId);
+          }
+        } else if (searchRes.status === 401) {
           googleAccessToken = null;
-          const context = state.lang === 'ES' ? 'Error de autenticación al actualizar archivo' : 'Authentication error updating file';
-          throw new Error(await extractDriveApiError(updateRes, context));
-        } else if (updateRes.status !== 404 && updateRes.status !== 403) {
-          const context = state.lang === 'ES' ? 'Error actualizando archivo en Google Drive' : 'Error updating Drive file';
-          throw new Error(await extractDriveApiError(updateRes, context));
+          throw new Error(await extractDriveApiError(searchRes, 'Error de autorización'));
         }
-        // If 404 or 403, we fall through to create a new file
+      } catch (searchErr) {
+        console.warn('[GoogleDrive] Error buscando archivo previo:', searchErr);
       }
 
-      // 3. If file didn't exist or update failed with 404/403, create file metadata and upload content
-      if (!uploadSuccess) {
-        const createMetaRes = await fetch('https://www.googleapis.com/drive/v3/files', {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            'Content-Type': 'application/json; charset=UTF-8'
-          },
-          body: JSON.stringify({
-            name: 'vet_favoritos_backup.json',
-            mimeType: 'application/json',
-            description: 'Copia de seguridad de recursos favoritos - VET Resources SPA'
-          })
-        });
+      let saveRes = null;
 
-        if (!createMetaRes.ok) {
-          if (createMetaRes.status === 401) googleAccessToken = null;
-          const context = state.lang === 'ES' ? 'Error creando archivo en Google Drive' : 'Error creating Drive file';
-          const errDetail = await extractDriveApiError(createMetaRes, context);
-          throw new Error(errDetail);
-        }
-
-        const newFileData = await createMetaRes.json();
-        fileId = newFileData.id;
-
-        const uploadNewRes = await fetch(
-          `https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=media`,
-          {
-            method: 'PATCH',
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-              'Content-Type': 'application/json; charset=UTF-8'
-            },
-            body: jsonStr
+      // 2. If existing file found, try updating it with PATCH
+      if (existingFileId) {
+        try {
+          saveRes = await uploadToGoogleDrive(accessToken, existingFileId, jsonStr);
+          console.log('[GoogleDrive] Respuesta PATCH:', saveRes.status);
+          if (!saveRes.ok && (saveRes.status === 404 || saveRes.status === 403)) {
+            console.warn('[GoogleDrive] No se pudo sobrescribir archivo previo (403/404), creando nuevo...');
+            saveRes = null; // trigger POST fallback
           }
-        );
-
-        if (!uploadNewRes.ok) {
-          if (uploadNewRes.status === 401) googleAccessToken = null;
-          const context = state.lang === 'ES' ? 'Error guardando datos en Google Drive' : 'Error saving data to Drive';
-          const errDetail = await extractDriveApiError(uploadNewRes, context);
-          throw new Error(errDetail);
+        } catch (patchErr) {
+          console.warn('[GoogleDrive] Falló PATCH, intentando POST nuevo...', patchErr);
+          saveRes = null;
         }
+      }
+
+      // 3. If no existing file or PATCH failed, create new with POST
+      if (!saveRes) {
+        saveRes = await uploadToGoogleDrive(accessToken, null, jsonStr);
+        console.log('[GoogleDrive] Respuesta POST nuevo:', saveRes.status);
+      }
+
+      if (!saveRes.ok) {
+        if (saveRes.status === 401) googleAccessToken = null;
+        const context = state.lang === 'ES' ? 'Error guardando en Google Drive' : 'Error saving to Google Drive';
+        const errDetail = await extractDriveApiError(saveRes, context);
+        throw new Error(errDetail);
       }
 
       showBackupStatus(t.gdriveSaved, 'success');
