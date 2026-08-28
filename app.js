@@ -1,7 +1,7 @@
 /* ==========================================================================
    Resources Directory SPA - Application Logic & State Controller
-   Version: 1.0
-   Updated: 2026-08-26
+   Version: 1.0.1
+   Updated: 2026-08-28
    Vanilla ES6 JavaScript Module with Direct Runtime Markdown Fetching,
    Offline Fallback, Google Drive OAuth & Cross-Device Favorites Sync
    ========================================================================== */
@@ -179,7 +179,8 @@ const UI_TEXT = {
     restoreSuccess: '¡Favoritos restaurados con éxito! ({count} favoritos guardados)',
     restoreSuccessReplaced: '¡Favoritos sobrescritos con éxito! ({count} favoritos guardados)',
     restoreSuccessMerged: '¡Favoritos combinados con éxito! ({count} favoritos guardados)',
-    restoreInvalid: 'El archivo o código de respaldo no es válido.'
+    restoreInvalid: 'El archivo o código de respaldo no es válido.',
+    versionLabel: 'Versión'
   },
   EN: {
     appTitle: 'Resources for Educators',
@@ -299,7 +300,8 @@ const UI_TEXT = {
     restoreSuccess: 'Favourites restored successfully! ({count} saved)',
     restoreSuccessReplaced: 'Favourites overwritten successfully! ({count} saved)',
     restoreSuccessMerged: 'Favourites merged successfully! ({count} saved)',
-    restoreInvalid: 'The backup file or code provided is invalid.'
+    restoreInvalid: 'The backup file or code provided is invalid.',
+    versionLabel: 'Version'
   }
 };
 
@@ -772,6 +774,21 @@ function updateStaticUIText() {
   if (txtSubmitFeedbackBtn) txtSubmitFeedbackBtn.textContent = t.btnSubmitFeedback;
 
   applyTheme(state.theme);
+  updateAppVersionLabels();
+}
+
+// Dynamic Version Label Synchronizer
+function updateAppVersionLabels() {
+  const currentVer = typeof APP_VERSION !== 'undefined' ? APP_VERSION : '1.0.1';
+  const t = UI_TEXT[state.lang] || UI_TEXT.ES;
+
+  document.querySelectorAll('.app-version-label').forEach(el => {
+    el.textContent = currentVer;
+  });
+
+  document.querySelectorAll('.txt-version-prefix').forEach(el => {
+    el.textContent = t.versionLabel || 'Versión';
+  });
 }
 
 // Main UI Render Controller
@@ -782,6 +799,7 @@ function renderUI() {
   renderFavorites();
   updateNavigation();
   updateFavoriteBadges();
+  updateAppVersionLabels();
 }
 
 // Render Slide View
@@ -1149,6 +1167,8 @@ function setViewMode(mode) {
 
   document.getElementById('slideViewport').style.display = mode === 'slides' ? 'flex' : 'none';
   document.getElementById('bottomNav').style.display = mode === 'slides' ? 'flex' : 'none';
+  const slideFooter = document.getElementById('slideFooter');
+  if (slideFooter) slideFooter.style.display = mode === 'slides' ? 'flex' : 'none';
   document.getElementById('explorerView').classList.toggle('active', mode === 'explorer');
   document.getElementById('favoritesView').classList.toggle('active', mode === 'favorites');
 

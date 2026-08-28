@@ -1,7 +1,7 @@
 /* ==========================================================================
    Resources Directory SPA - Option 1 Design System & Styles
-   Version: 1.0
-   Updated: 2026-08-26
+   Version: 1.0.1
+   Updated: 2026-08-28
    Theme: Dark Glassmorphic Navy (#0b132b, #1c2541, #3a506b, #4cc9f0, #4361ee)
    ========================================================================== */
 
@@ -1587,6 +1587,61 @@ button.stat-card {
   flex: 1;
 }
 
+/* Version Footer & Badges */
+.view-footer-wrapper {
+  margin-top: 32px;
+  padding: 16px 0 8px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-top: 1px solid var(--border-color);
+  width: 100%;
+}
+
+.slide-footer-wrapper {
+  margin-top: 16px;
+  border-top: none;
+  padding: 6px 0 0 0;
+}
+
+.drawer-footer-wrapper {
+  padding: 16px;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--bg-surface);
+}
+
+.app-version-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 14px;
+  border-radius: var(--radius-pill);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: var(--transition-fast);
+  user-select: none;
+}
+
+.app-version-badge:hover {
+  border-color: var(--border-highlight);
+  color: var(--text-main);
+  box-shadow: 0 4px 12px rgba(58, 134, 255, 0.2);
+}
+
+.app-version-badge strong,
+.app-version-badge .app-version-label {
+  color: var(--accent-cyan);
+  font-weight: 700;
+}
+
 /* Responsive Breakpoints */
 @media (max-width: 900px) {
   .resources-grid {
@@ -1609,3 +1664,4 @@ button.stat-card {
     display: none;
   }
 }
+

@@ -1,7 +1,7 @@
 <!-- ==========================================================================
    Resources Directory SPA - Main HTML Entry Point
-   Version: 1.0
-   Updated: 2026-08-26
+   Version: 1.0.1
+   Updated: 2026-08-28
    ========================================================================== -->
 <!DOCTYPE html>
 <html lang="es">
@@ -11,9 +11,13 @@
   <meta name="description" content="Catálogo e Índice de Recursos Online para Formadores - Formación Profesional y Educación de Adultos.">
   <title>Recursos para Formadores | VET Resources SPA</title>
   
+  <script>
+    const APP_VERSION = '1.0.1';
+  </script>
+  
   <!-- Favicon, Fonts & Stylesheet -->
   <link rel="icon" type="image/svg+xml" href="./favicon.svg">
-  <link rel="stylesheet" href="./styles.css?v=1.0">
+  <link rel="stylesheet" href="./styles.css?v=1.0.1">
   <!-- Google Identity Services for Google Drive OAuth Sync -->
   <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
@@ -92,6 +96,13 @@
       <button id="btnNext" class="nav-btn btn-next">Siguiente →</button>
     </div>
 
+    <!-- Slide View Mode Version Footer -->
+    <div id="slideFooter" class="view-footer-wrapper slide-footer-wrapper">
+      <div class="app-version-badge">
+        <span class="txt-version-prefix">Versión</span> <strong class="app-version-label">1.0.1</strong>
+      </div>
+    </div>
+
     <!-- 2. Explorer View Mode -->
     <div id="explorerView" class="explorer-view">
       <div class="explorer-toolbar">
@@ -113,6 +124,13 @@
 
       <div id="explorerGrid" class="explorer-grid">
         <!-- 77 Resource Cards Rendered by app.js -->
+      </div>
+
+      <!-- Explorer View Mode Version Footer -->
+      <div class="view-footer-wrapper">
+        <div class="app-version-badge">
+          <span class="txt-version-prefix">Versión</span> <strong class="app-version-label">1.0.1</strong>
+        </div>
       </div>
     </div>
 
@@ -152,6 +170,13 @@
           <span>🗂️</span> <span id="txtFavEmptyBtn">Explorar Recursos</span>
         </button>
       </div>
+
+      <!-- Favorites View Mode Version Footer -->
+      <div class="view-footer-wrapper">
+        <div class="app-version-badge">
+          <span class="txt-version-prefix">Versión</span> <strong class="app-version-label">1.0.1</strong>
+        </div>
+      </div>
     </div>
 
   </main>
@@ -165,6 +190,11 @@
       </div>
       <div id="drawerList" class="drawer-list">
         <!-- 14 Drawer List Items Rendered by app.js -->
+      </div>
+      <div class="drawer-footer-wrapper">
+        <div class="app-version-badge">
+          <span class="txt-version-prefix">Versión</span> <strong class="app-version-label">1.0.1</strong>
+        </div>
       </div>
     </div>
   </div>
@@ -402,7 +432,7 @@
   </div>
 
   <!-- Application Logic -->
-  <script src="./embedded_data.js?v=1.0"></script>
-  <script src="./app.js?v=1.0"></script>
+  <script src="./embedded_data.js?v=1.0.1"></script>
+  <script src="./app.js?v=1.0.1"></script>
 </body>
 </html>
