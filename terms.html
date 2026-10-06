@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Términos del Servicio / Terms of Service - RecursosWeb</title>
+  <meta name="description" content="Términos del Servicio / Terms of Service de RecursosWeb para autenticación Google Single Sign-On." />
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --border: #334155;
+      --accent: #38bdf8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      padding: 2rem 1rem;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2.5rem;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+    }
+
+    header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1.5rem;
+      margin-bottom: 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .brand-logo {
+      width: 48px;
+      height: 48px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .brand-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .brand-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .lang-switcher {
+      display: inline-flex;
+      background: #0f172a;
+      padding: 4px;
+      border-radius: 9999px;
+      border: 1px solid var(--border);
+    }
+
+    .lang-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 6px 16px;
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .lang-btn.active {
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+
+    h1 {
+      font-size: 1.85rem;
+      margin-bottom: 0.5rem;
+      color: #ffffff;
+    }
+
+    .meta-date {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      margin-bottom: 1.75rem;
+    }
+
+    h2 {
+      font-size: 1.25rem;
+      color: var(--accent);
+      margin-top: 1.75rem;
+      margin-bottom: 0.75rem;
+      border-left: 3px solid var(--primary);
+      padding-left: 0.75rem;
+    }
+
+    p, ul, ol {
+      margin-bottom: 1rem;
+      color: #cbd5e1;
+    }
+
+    ul, ol {
+      padding-left: 1.5rem;
+    }
+
+    li {
+      margin-bottom: 0.4rem;
+    }
+
+    .badge-free {
+      display: inline-block;
+      background: rgba(56, 189, 248, 0.15);
+      color: #38bdf8;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 1.25rem;
+    }
+
+    .highlight-box {
+      background: rgba(79, 70, 229, 0.1);
+      border: 1px solid rgba(79, 70, 229, 0.3);
+      border-radius: 10px;
+      padding: 1.25rem;
+      margin: 1.25rem 0;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    footer {
+      margin-top: 2.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.25rem;
+    }
+
+    .lang-content {
+      display: none;
+    }
+
+    .lang-content.active {
+      display: block;
+      animation: fadeIn 0.25s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        padding: 1.5rem;
+      }
+      h1 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="brand">
+        <div class="brand-logo">
+          <img src="/logo.png" alt="RecursosWeb Logo" />
+        </div>
+        <div class="brand-title">RecursosWeb</div>
+      </div>
+      <div class="lang-switcher" role="tablist" aria-label="Language selector">
+        <button id="btn-es" class="lang-btn active" onclick="switchLang('es')">Español</button>
+        <button id="btn-en" class="lang-btn" onclick="switchLang('en')">English</button>
+      </div>
+    </header>
+
+    <!-- SPANISH CONTENT -->
+    <main id="content-es" class="lang-content active" lang="es">
+      <div class="badge-free">Servicio 100% Gratuito y Libre de Publicidad</div>
+      <h1>Términos del Servicio</h1>
+      <p class="meta-date"><strong>Última actualización:</strong> 6 de octubre de 2026</p>
+
+      <p>
+        Bienvenido a <strong>RecursosWeb</strong>. Al acceder o utilizar nuestra plataforma web y sus servicios relacionados, usted acepta quedar vinculado por estos Términos del Servicio. Si no está de acuerdo con alguna parte de los términos, le rogamos que no utilice la aplicación.
+      </p>
+
+      <div class="highlight-box">
+        <strong>Naturaleza del Servicio:</strong> RecursosWeb es una plataforma colaborativa y educativa ofrecida de forma <strong>completamente gratuita</strong> para docentes, formadores y la comunidad educativa. No cobramos tarifas de suscripción ni monetizamos sus datos personales.
+      </div>
+
+      <h2>1. Descripción del Servicio</h2>
+      <p>
+        RecursosWeb proporciona herramientas para descubrir, organizar, catalogar, valorar y proponer recursos educativos digitales y materiales formativos para la Formación Profesional y la docencia.
+      </p>
+
+      <h2>2. Registro de Cuentas y Autenticación con Google</h2>
+      <ul>
+        <li>Para acceder a funciones avanzadas (como proponer recursos, guardar favoritos o comentar), los usuarios pueden registrarse e iniciar sesión a través de <strong>Google Single Sign-On (Google SSO)</strong>.</li>
+        <li>Usted es responsable de salvaguardar el acceso a su cuenta de Google y de todas las actividades que ocurran bajo su sesión.</li>
+        <li>Debe proporcionar información veraz y mantener actualizados los datos vinculados a su cuenta.</li>
+      </ul>
+
+      <h2>3. Uso Aceptable y Normas de Conducta</h2>
+      <p>Al utilizar RecursosWeb, usted se compromete a no:</p>
+      <ul>
+        <li>Publicar, enlazar o difundir contenido ilegal, difamatorio, fraudulento, obsceno, discriminatorio o que infrinja derechos de propiedad intelectual de terceros.</li>
+        <li>Introducir virus, malware, scripts maliciosos o cualquier código diseñado para interrumpir, dañar o limitar el funcionamiento de la plataforma o de terceros.</li>
+        <li>Realizar actividades de extracción automatizada no autorizada (scraping masivo) o sobrecargar intencionadamente los servidores.</li>
+        <li>Hacerse pasar por otra persona, entidad o falsear su afiliación con cualquier institución.</li>
+      </ul>
+
+      <h2>4. Contenido Compartido y Propiedad Intelectual</h2>
+      <ul>
+        <li><strong>Sus aportaciones:</strong> Al proponer o publicar descripciones y enlaces a recursos educativos, usted declara tener derecho a compartir dicha información y concede a RecursosWeb una licencia no exclusiva y gratuita para mostrar dicho contenido a otros usuarios de la plataforma con fines formativos.</li>
+        <li><strong>Recursos de terceros:</strong> Los recursos enlazados, plataformas externas, marcas o materiales citados pertenecen a sus respectivos creadores y titulares de derechos de autor.</li>
+      </ul>
+
+      <h2>5. Exclusión de Garantías y Limitación de Responsabilidad</h2>
+      <p>
+        La aplicación se proporciona "tal cual" (<em>as is</em>) y "según disponibilidad" (<em>as available</em>), sin garantías de ningún tipo, expresas o implícitas.
+      </p>
+      <p>
+        Al tratarse de una herramienta gratuita sin fines comerciales, RecursosWeb y sus administradores no serán responsables por interrupciones puntuales del servicio, pérdida de datos o contenidos, o por la exactitud de los recursos compartidos por terceros en la plataforma.
+      </p>
+
+      <h2>6. Suspensión y Cancelación de Cuenta</h2>
+      <p>
+        Nos reservamos el derecho de suspender o cancelar el acceso a la plataforma a cualquier usuario que infrinja estos Términos del Servicio o utilice la plataforma de manera indebida, sin previo aviso. Los usuarios pueden solicitar la baja de su cuenta en cualquier momento.
+      </p>
+
+      <h2>7. Modificaciones de los Términos</h2>
+      <p>
+        Podemos actualizar estos Términos periódicamente. Cualquier cambio sustancial será debidamente reflejado en esta página con la fecha de actualización correspondiente.
+      </p>
+
+      <h2>8. Contacto</h2>
+      <p>
+        Para cualquier duda, sugerencia o reclamación relativa a estos Términos del Servicio, puede ponerse en contacto con el equipo de RecursosWeb a través de los canales de soporte indicados en la plataforma.
+      </p>
+    </main>
+
+    <!-- ENGLISH CONTENT -->
+    <main id="content-en" class="lang-content" lang="en">
+      <div class="badge-free">100% Free Service & Ad-Free</div>
+      <h1>Terms of Service</h1>
+      <p class="meta-date"><strong>Last Updated:</strong> October 6, 2026</p>
+
+      <p>
+        Welcome to <strong>RecursosWeb</strong>. By accessing or using our web application and related services, you agree to be bound by these Terms of Service. If you do not agree with any part of these terms, please do not use the application.
+      </p>
+
+      <div class="highlight-box">
+        <strong>Nature of the Service:</strong> RecursosWeb is a collaborative educational platform provided <strong>completely free of charge</strong> for teachers, trainers, educators, and students. We do not charge subscription fees nor do we monetize your personal data.
+      </div>
+
+      <h2>1. Description of Service</h2>
+      <p>
+        RecursosWeb provides tools to discover, organize, catalog, review, and propose digital educational resources and training materials for Vocational Training and teaching.
+      </p>
+
+      <h2>2. Account Registration and Google Authentication</h2>
+      <ul>
+        <li>To access collaborative features (such as proposing resources, saving favorites, or commenting), users may register and authenticate via <strong>Google Single Sign-On (Google SSO)</strong>.</li>
+        <li>You are responsible for maintaining the security of your Google account credentials and for any activity that takes place under your account.</li>
+        <li>You agree to provide accurate information and keep your account details up to date.</li>
+      </ul>
+
+      <h2>3. Acceptable Use and Code of Conduct</h2>
+      <p>When using RecursosWeb, you agree NOT to:</p>
+      <ul>
+        <li>Publish, link to, or disseminate unlawful, defamatory, fraudulent, obscene, discriminatory content, or content that infringes third-party intellectual property rights.</li>
+        <li>Introduce viruses, malware, malicious scripts, or any code designed to disrupt, harm, or limit the operation of the application or third-party devices.</li>
+        <li>Perform unauthorized automated scraping, mass data harvesting, or intentionally burden the server infrastructure.</li>
+        <li>Impersonate any person, entity, or misrepresent your affiliation with any institution.</li>
+      </ul>
+
+      <h2>4. User Content and Intellectual Property</h2>
+      <ul>
+        <li><strong>Your contributions:</strong> By proposing or publishing descriptions and links to educational resources, you represent that you have the right to share such material and grant RecursosWeb a non-exclusive, royalty-free license to display that content to other users for educational purposes.</li>
+        <li><strong>Third-party resources:</strong> Linked external resources, trademarks, and third-party materials remain the property of their respective creators and copyright owners.</li>
+      </ul>
+
+      <h2>5. Disclaimer of Warranties and Limitation of Liability</h2>
+      <p>
+        The application is provided on an "as is" and "as available" basis, without warranties of any kind, whether express or implied.
+      </p>
+      <p>
+        Because this is a free, non-commercial educational tool, RecursosWeb and its administrators shall not be liable for temporary service interruptions, data loss, or the accuracy of third-party educational content linked in the platform.
+      </p>
+
+      <h2>6. Termination and Account Deletion</h2>
+      <p>
+        We reserve the right to suspend or terminate access to the platform for any user who violates these Terms of Service or abuses the application, without prior notice. Users may also request the deletion of their account at any time.
+      </p>
+
+      <h2>7. Changes to Terms</h2>
+      <p>
+        We may update these Terms from time to time. Any material changes will be reflected on this page with an updated revision date.
+      </p>
+
+      <h2>8. Contact Us</h2>
+      <p>
+        If you have any questions or feedback regarding these Terms of Service, please reach out via the official RecursosWeb support channels.
+      </p>
+    </main>
+
+    <footer>
+      <div>&copy; 2026 RecursosWeb. All rights reserved.</div>
+      <div class="nav-links">
+        <a href="privacy.html">Política de Privacidad / Privacy Policy</a>
+        <span>&bull;</span>
+        <a href="terms.html">Términos del Servicio / Terms of Service</a>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    function switchLang(lang) {
+      document.querySelectorAll('.lang-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.lang-btn').forEach(el => el.classList.remove('active'));
+
+      const targetContent = document.getElementById('content-' + lang);
+      const targetBtn = document.getElementById('btn-' + lang);
+
+      if (targetContent && targetBtn) {
+        targetContent.classList.add('active');
+        targetBtn.classList.add('active');
+        document.documentElement.lang = lang;
+        try {
+          localStorage.setItem('recursosweb_doc_lang', lang);
+        } catch(e) {}
+      }
+    }
+
+    // Auto detect initial language
+    (function() {
+      try {
+        const saved = localStorage.getItem('recursosweb_doc_lang');
+        if (saved === 'en' || saved === 'es') {
+          switchLang(saved);
+          return;
+        }
+      } catch(e) {}
+      
+      const browserLang = navigator.language || navigator.userLanguage || '';
+      if (browserLang.toLowerCase().startsWith('en')) {
+        switchLang('en');
+      } else {
+        switchLang('es');
+      }
+    })();
+  </script>
+</body>
+</html>
